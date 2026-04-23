@@ -123,7 +123,7 @@ plan→execute→evaluate).
 
 ### 2.4 Harness engineering (V5, V2, фоном V1)
 
-Harness — каркас, который мы надеваем на LLM. Три первоклассных сущности:
+Harness — каркас, который мы надеваем на LLM. Четыре первоклассных сущности:
 
 - **Rules** (`CLAUDE.md` / `AGENTS.md`) — что делать **всегда**.
 - **Commands** (slash-commands в Claude Code, `prompts/*.md` у нас) — *как*
