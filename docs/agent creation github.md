@@ -18,8 +18,10 @@ created: 2026-04-23
 > [OpenClaw](https://github.com/openclaw/openclaw). Референс-реализация —
 > [`pickle-bot`](https://github.com/czl9707/pickle-bot).
 
-Формат: читать со смартфона в Obsidian. Технические термины сохранены на
-английском (tool, skill, event bus, cron, channel, session, prompt и т.д.).
+Формат: длинная статья для чтения со смартфона — в Obsidian или прямо в
+GitHub-рендере. Технические термины сохранены на английском (tool, skill,
+event bus, cron, channel, session, prompt и т.д.). Ссылки оглавления — обычные
+Markdown-якоря, работают в обеих средах.
 
 ---
 
@@ -42,32 +44,32 @@ chat loop полноценного LLM-агента. Каждый следующ
 
 ## Оглавление
 
-- [[#Общая философия проекта]]
-- [[#Phase 1 — Capable Single Agent (steps 00–06)]]
-  - [[#Step 00 — Chat Loop]]
-  - [[#Step 01 — Tools]]
-  - [[#Step 02 — Skills]]
-  - [[#Step 03 — Persistence]]
-  - [[#Step 04 — Slash Commands]]
-  - [[#Step 05 — Compaction]]
-  - [[#Step 06 — Web Tools]]
-- [[#Phase 2 — Event-Driven Architecture (steps 07–10)]]
-  - [[#Step 07 — Event-Driven]]
-  - [[#Step 08 — Config Hot Reload]]
-  - [[#Step 09 — Channels]]
-  - [[#Step 10 — WebSocket]]
-- [[#Phase 3 — Autonomous & Multi-Agent (steps 11–15)]]
-  - [[#Step 11 — Multi-Agent Routing]]
-  - [[#Step 12 — Cron + Heartbeat]]
-  - [[#Step 13 — Multi-Layer Prompts]]
-  - [[#Step 14 — Post Message Back]]
-  - [[#Step 15 — Agent Dispatch]]
-- [[#Phase 4 — Production & Scale (steps 16–17)]]
-  - [[#Step 16 — Concurrency Control]]
-  - [[#Step 17 — Memory]]
-- [[#Что намеренно не вошло в туториал]]
-- [[#Как запускать]]
-- [[#Что унести в First-Agent]]
+- [Общая философия проекта](#общая-философия-проекта)
+- [Phase 1 — Capable Single Agent (steps 00–06)](#phase-1--capable-single-agent-steps-0006)
+  - [Step 00 — Chat Loop](#step-00--chat-loop)
+  - [Step 01 — Tools](#step-01--tools)
+  - [Step 02 — Skills](#step-02--skills)
+  - [Step 03 — Persistence](#step-03--persistence)
+  - [Step 04 — Slash Commands](#step-04--slash-commands)
+  - [Step 05 — Compaction](#step-05--compaction)
+  - [Step 06 — Web Tools](#step-06--web-tools)
+- [Phase 2 — Event-Driven Architecture (steps 07–10)](#phase-2--event-driven-architecture-steps-0710)
+  - [Step 07 — Event-Driven](#step-07--event-driven)
+  - [Step 08 — Config Hot Reload](#step-08--config-hot-reload)
+  - [Step 09 — Channels](#step-09--channels)
+  - [Step 10 — WebSocket](#step-10--websocket)
+- [Phase 3 — Autonomous & Multi-Agent (steps 11–15)](#phase-3--autonomous--multi-agent-steps-1115)
+  - [Step 11 — Multi-Agent Routing](#step-11--multi-agent-routing)
+  - [Step 12 — Cron + Heartbeat](#step-12--cron--heartbeat)
+  - [Step 13 — Multi-Layer Prompts](#step-13--multi-layer-prompts)
+  - [Step 14 — Post Message Back](#step-14--post-message-back)
+  - [Step 15 — Agent Dispatch](#step-15--agent-dispatch)
+- [Phase 4 — Production & Scale (steps 16–17)](#phase-4--production--scale-steps-1617)
+  - [Step 16 — Concurrency Control](#step-16--concurrency-control)
+  - [Step 17 — Memory](#step-17--memory)
+- [Что намеренно не вошло в туториал](#что-намеренно-не-вошло-в-туториал)
+- [Как запускать](#как-запускать)
+- [Что унести в First-Agent](#что-унести-в-first-agent)
 
 ---
 
@@ -150,7 +152,7 @@ Skills — это **ленивые** capabilities, которые подгруж
   tool. Никакого специализированного skill tool не нужно — tool registry
   остаётся меньше.
 
-Второй вариант красиво ложится на [[#Step 13 — Multi-Layer Prompts]].
+Второй вариант красиво ложится на [Step 13 — Multi-Layer Prompts](#step-13--multi-layer-prompts).
 
 ### Step 03 — Persistence
 
@@ -464,7 +466,7 @@ cron.
 
 - Memory agent — специализированный агент, отвечающий за работу с
   памятью (в туториале это `cookie`).
-- Обращаемся к нему через subagent dispatch из [[#Step 15 — Agent Dispatch]].
+- Обращаемся к нему через subagent dispatch из [Step 15 — Agent Dispatch](#step-15--agent-dispatch).
 
 **Альтернативные подходы к памяти:**
 
@@ -519,22 +521,27 @@ cron.
 
 Короткий список идей, которые напрямую применимы к нашему проекту:
 
-- **JSONL persistence** ([[#Step 03 — Persistence]]) — самый дешёвый
-  способ получить «почти базу данных» для session history без SQL.
-- **Skills как lazy-loaded `SKILL.md`** ([[#Step 02 — Skills]]) — ровно тот
-  паттерн, который мы уже видим в Devin. Разумно переиспользовать.
-- **Event bus как ядро** ([[#Step 07 — Event-Driven]]) — если хотим когда-то
-  выйти за CLI, проще сразу закладывать event-driven архитектуру, чем
-  рефакторить позже.
-- **Multi-layer prompts** ([[#Step 13 — Multi-Layer Prompts]]) — кандидат на
-  отдельный ADR: как мы собираем system prompt (identity + soul + workspace +
-  memory layer + runtime context).
-- **Concurrency control per agent** ([[#Step 16 — Concurrency Control]]) —
+- **JSONL persistence** ([Step 03 — Persistence](#step-03--persistence)) —
+  самый дешёвый способ получить «почти базу данных» для session history
+  без SQL.
+- **Skills как lazy-loaded `SKILL.md`** ([Step 02 — Skills](#step-02--skills))
+  — ровно тот паттерн, который мы уже видим в Devin. Разумно
+  переиспользовать.
+- **Event bus как ядро** ([Step 07 — Event-Driven](#step-07--event-driven))
+  — если хотим когда-то выйти за CLI, проще сразу закладывать
+  event-driven архитектуру, чем рефакторить позже.
+- **Multi-layer prompts**
+  ([Step 13 — Multi-Layer Prompts](#step-13--multi-layer-prompts)) —
+  кандидат на отдельный ADR: как мы собираем system prompt (identity +
+  soul + workspace + memory layer + runtime context).
+- **Concurrency control per agent**
+  ([Step 16 — Concurrency Control](#step-16--concurrency-control)) —
   простой семафор на `AgentDef.max_concurrency`, must-have перед любым
   «деплоем куда-то».
-- **Memory через dedicated subagent** ([[#Step 17 — Memory]]) — один из
-  четырёх вариантов, и пока самый понятный: изолированный контекст,
-  отдельные tools, доступ через dispatch.
+- **Memory через dedicated subagent**
+  ([Step 17 — Memory](#step-17--memory)) — один из четырёх вариантов, и
+  пока самый понятный: изолированный контекст, отдельные tools, доступ
+  через dispatch.
 
 Для привязки к нашему процессу см. [`workflow.md`](./workflow.md) и
 [`architecture.md`](./architecture.md). Когда доберёмся до конкретных

@@ -12,12 +12,14 @@
 
 - [`README.md`](./README.md) — единый обзор проекта (на русском).
 - [`AGENTS.md`](./AGENTS.md) — этот файл.
-- [`docs/`](./docs/README.md) — вики по работе с Devin (5 файлов).
+- [`docs/`](./docs/README.md) — вики по работе с Devin (6 файлов).
   - `architecture.md` — архитектура LLM-агента.
   - `workflow.md` — процесс Research → Scaffolding → Module.
   - `prompting.md` — шаблоны промптов (T1–T5).
   - `devin-reference.md` — справочник по Devin.
   - `glossary.md`.
+  - `agent creation github.md` — конспект туториала
+    [build-your-own-openclaw](https://github.com/czl9707/build-your-own-openclaw).
 - [`knowledge/`](./knowledge/README.md) — долговременная память проекта
   (project-overview, ADR, переиспользуемые промпты).
 
