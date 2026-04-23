@@ -1,40 +1,58 @@
 # AGENTS.md
 
+Короткая инструкция для AI-агентов (Devin и подобных), работающих в этом репо.
+
 ## Project Overview
 
-This is the **First-Agent** project — a research-stage initiative to build a new LLM agent. The repository serves as the foundational workspace for architecture, documentation, and implementation.
+**First-Agent** — исследовательский проект по созданию собственного LLM-агента.
+Стадия: `research → start of module creation`. Кода в `src/` пока нет — сначала
+идёт research-фаза с заметками и ADR. Подробности — в [`README.md`](./README.md).
 
 ## Repository Structure
 
-- `/docs` — All project documentation
-  - `/docs/wiki` — Wiki-style reference pages (Devin overview, coding agents, tools, integrations)
-  - `/docs/knowledge-base` — Knowledge bank (prompting, knowledge management, skills, playbooks)
-  - `/docs/guides` — How-to guides (getting started, best practices, building agents, automation)
-- `AGENTS.md` — This file; instructions for AI agents working in this repo
-- `README.md` — Project overview and quick-start
+- [`README.md`](./README.md) — единый обзор проекта (на русском).
+- [`AGENTS.md`](./AGENTS.md) — этот файл.
+- [`docs/`](./docs/README.md) — вики по работе с Devin (5 файлов).
+  - `architecture.md` — архитектура LLM-агента.
+  - `workflow.md` — процесс Research → Scaffolding → Module.
+  - `prompting.md` — шаблоны промптов (T1–T5).
+  - `devin-reference.md` — справочник по Devin.
+  - `glossary.md`.
+- [`knowledge/`](./knowledge/README.md) — долговременная память проекта
+  (project-overview, ADR, переиспользуемые промпты).
 
 ## Working in This Repo
 
-- All documentation is written in Markdown.
-- When adding new docs, place them in the appropriate subdirectory under `/docs`.
-- Follow the existing naming convention: lowercase with hyphens (e.g., `getting-started.md`).
-- Update `/docs/README.md` (the documentation index) when adding new pages.
-- Keep documentation focused and actionable — prefer concrete examples over abstract descriptions.
+- Всё документация — Markdown. ATX-заголовки (`#`, `##`), fenced code blocks с
+  указанием языка, строки желательно ≤ 120 символов.
+- Новые документы кладём в правильную подпапку:
+  - Справочная/гайдовая дока → `docs/`.
+  - Проектные артефакты (решения, исследование, промпты) → `knowledge/`.
+- При добавлении нового файла в `docs/` — обновляем
+  [`docs/README.md`](./docs/README.md).
+- При значимом архитектурном решении — создаём ADR из шаблона
+  [`knowledge/adr/0000-template.md`](./knowledge/adr/0000-template.md).
 
 ## Development Workflow
 
-- Create feature branches from `main`.
-- Use pull requests for all changes.
-- Write clear commit messages describing the change.
+- Ветки: `devin/<timestamp>-<slug>` от `main`.
+- Все изменения — через Pull Request.
+- Коммит-сообщения описательные, по-английски, настоящее время
+  (`docs: add architecture note`, `adr: pick orchestration style`).
+- В `main` ничего не пушим напрямую.
 
 ## Testing Guidelines
 
-- Verify all Markdown links are valid before committing.
-- Ensure documentation renders correctly in GitHub's Markdown viewer.
+- Пока что кода нет, поэтому CI не настроен. Проверять:
+  - Markdown-ссылки ведут куда надо.
+  - Документы читаются в GitHub-рендере (нет съехавших таблиц и т.п.).
+- Когда появится `src/` — `make lint / typecheck / test`
+  (см. [`docs/workflow.md`](./docs/workflow.md), фаза S).
 
-## Code Style
+## Code Style (будущий)
 
-- Use ATX-style headers (`#`, `##`, `###`).
-- Use fenced code blocks with language identifiers for examples.
-- Keep lines under 120 characters where practical.
-- Use reference-style links for repeated URLs.
+- Python 3.11+, полные type-хинты.
+- `ruff check` + `ruff format`.
+- `mypy --strict` (или `pyright`) на модули.
+- `pytest`; LLM-клиент и сеть в тестах — мокаются.
+- Промпты — отдельными файлами в `src/<module>/prompts/`, не в Python-строках.
