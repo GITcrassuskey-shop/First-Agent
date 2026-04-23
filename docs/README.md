@@ -10,6 +10,7 @@
 | [prompting.md](./prompting.md) | Пишем промпт для Devin. Основы, шаблоны T1–T5, anti-patterns. |
 | [devin-reference.md](./devin-reference.md) | Что Devin умеет, когда его звать, как устроена его память (Knowledge/Skills/Playbooks), MCP, scheduled sessions. |
 | [glossary.md](./glossary.md) | Незнакомый термин. |
+| [agent creation github.md](<./agent creation github.md>) | Конспект туториала [build-your-own-openclaw](https://github.com/czl9707/build-your-own-openclaw) — 18 шагов сборки агента с нуля. Формат статьи под Obsidian / смартфон. |
 
 Долговременная память проекта (ADR, промпты, обзор) — в [`../knowledge/`](../knowledge/README.md).
 
