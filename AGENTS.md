@@ -43,6 +43,31 @@
   (`docs: add architecture note`, `adr: pick orchestration style`).
 - В `main` ничего не пушим напрямую.
 
+## Query Routing
+
+Когда нужно ответить на вопрос по проекту — **ищи по правильной папке**,
+не загружай всё подряд в контекст.
+
+| Тип вопроса | Куда идти первым | Верификация |
+|---|---|---|
+| Архитектура, трёхслойная модель, паттерны | [`docs/architecture.md`](./docs/architecture.md) | ADR |
+| Принятое решение и причины | [`knowledge/adr/`](./knowledge/adr/) | — |
+| Процесс, workflow, как работать с Devin | [`docs/workflow.md`](./docs/workflow.md), [`docs/devin-reference.md`](./docs/devin-reference.md) | — |
+| Результат исследования (critique, сравнение, landscape) | [`knowledge/research/`](./knowledge/research/) | Первоисточники из `source:` во frontmatter заметки |
+| Конкретное число / дата / цитата | **Первоисточник** (URL / код / gist), не summary-заметка | — |
+| Термины | [`docs/glossary.md`](./docs/glossary.md) | — |
+
+**Chain-of-custody rule.** Если в ответе участвует конкретная цифра,
+дата, имя или решение — идти в первоисточник (URL, код, gist) и
+цитировать *оттуда*. Не цитировать summary в `knowledge/research/` как
+«авторитетный источник» для специфики; summary — это *указатель на
+источник*, не сам источник. Обоснование и разбор failure mode — в
+[`knowledge/research/llm-wiki-critique.md`](./knowledge/research/llm-wiki-critique.md).
+
+**Supersession, не overwrite.** Устаревшую заметку не перезаписывать
+молча. Пометить её `> **Status:** superseded by <link>` и оставить для
+аудита.
+
 ## Testing Guidelines
 
 - Пока что кода нет, поэтому CI не настроен. Проверять:

@@ -152,12 +152,46 @@ elif task_exceeds_capability:
 
 ### Архитектура памяти
 
-| Тип | Назначение | Пример |
+| Тип | Назначение | Пример | CogSci-аналог |
+|---|---|---|---|
+| Session memory | Контекст одной задачи | Содержимое файлов, прошлые команды | working |
+| Persistent knowledge | Факты между сессиями | «Используем pnpm, не npm» | semantic |
+| Procedural memory | Пошаговые процедуры | `SKILL.md` | procedural |
+| Episodic memory | Итоги прошлых сессий | Session Insights / логи | episodic |
+
+Маппинг на CogSci-таксономию (Tulving 1972, Atkinson–Shiffrin) —
+не переименование, а общий язык для будущих ADR'ов. Подробнее о том,
+почему это важно для **памяти агента** (а не вики для человека),
+— в [`knowledge/research/llm-wiki-critique.md §5`](../knowledge/research/llm-wiki-critique.md).
+
+#### Provenance и chain of custody
+
+Любой факт в `Persistent knowledge`, который LLM *сам написал* (а не
+скопировал из первоисточника), должен знать:
+
+- **source** — на что он опирается (URL, путь в репо, номер коммита);
+- **chain_of_custody** — где искать первоисточник, если нужно точное
+  значение (конкретная цифра, дата, имя);
+- **superseded_by** — куда идти, если заметка заменена.
+
+Без этих трёх полей LLM-написанная summary начинает конкурировать с
+первоисточником и со временем *замещает* его для retrieval'а — даже если
+сам файл-источник всё ещё лежит в репо. См. детальный разбор эффекта и
+template frontmatter'а в [`llm-wiki-critique.md`](../knowledge/research/llm-wiki-critique.md).
+
+#### Стабильное vs volatile знание
+
+Разные типы знания требуют разной политики синтеза:
+
+| Тип | Где лежит | Политика |
 |---|---|---|
-| Session memory | Контекст одной задачи | Содержимое файлов, прошлые команды |
-| Persistent knowledge | Факты между сессиями | «Используем pnpm, не npm» |
-| Procedural memory | Пошаговые процедуры | `SKILL.md` |
-| Episodic memory | Итоги прошлых сессий | Session Insights / логи |
+| Стабильное (архитектура, ADR, глоссарий) | `knowledge/adr/`, `docs/` | Синтезируется один раз при ревью, редко меняется, можно цитировать из summary |
+| Semi-stable (research notes) | `knowledge/research/` | Обновляется при significant findings, frontmatter-provenance обязательно |
+| Volatile (логи сессий, session-digest'ы) | (пока не заведено) | Синтезировать только при необходимости, не индексировать как источник |
+
+Конкретные числа, даты, решения — *всегда* сверяем с первоисточником, не
+цитируем из summary-заметки. Это правило вынесено в routing-секцию
+[`AGENTS.md`](../AGENTS.md).
 
 ### Восстановление после ошибок
 
