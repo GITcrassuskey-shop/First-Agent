@@ -162,7 +162,7 @@ elif task_exceeds_capability:
 Маппинг на CogSci-таксономию (Tulving 1972, Atkinson–Shiffrin) —
 не переименование, а общий язык для будущих ADR'ов. Подробнее о том,
 почему это важно для **памяти агента** (а не вики для человека),
-— в [`knowledge/research/llm-wiki-critique.md §5`](../knowledge/research/llm-wiki-critique.md).
+— в [`knowledge/research/llm-wiki-critique-first-agent.md §5`](../knowledge/research/llm-wiki-critique-first-agent.md#5-применимость-к-памяти-llm-агента-а-не-к-wiki-для-человека).
 
 #### Provenance и chain of custody
 

@@ -54,7 +54,7 @@ superseded_by: "<path, if any>"
 заметке есть числа, даты, цитаты или решения, на которые кто-то может
 сослаться. Цель — не потерять связь между LLM-написанной summary и
 первоисточником. Подробнее — в
-[`research/llm-wiki-critique.md §9.1`](./research/llm-wiki-critique.md).
+[`research/llm-wiki-critique-first-agent.md §9`](./research/llm-wiki-critique-first-agent.md#9-конкретные-правки-в-существующие-файлы).
 
 ## What goes where
 
