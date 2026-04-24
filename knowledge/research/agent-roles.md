@@ -69,7 +69,7 @@ CAMEL / graphify напрямую, либо это публикации, на к
 хостах: Codex, Aider, OpenCode, Copilot CLI, Cursor, Droid, Trae, Kiro, VS
 Code Copilot Chat, Windows). Pipeline:
 
-```
+```text
 detect() → extract() → build_graph() → cluster() → analyze() → report() → export()
 ```
 
@@ -161,7 +161,7 @@ personality-style prompt для исполнителя.
 
 В `graphify/` лежит не один `skill.md`, а одиннадцать:
 
-```
+```text
 skill.md          # Claude Code (canonical)
 skill-aider.md    skill-claw.md     skill-codex.md
 skill-copilot.md  skill-droid.md    skill-kiro.md
@@ -217,7 +217,7 @@ prompt-словарей, отдельный *workforce* — иерархичес
 
 Канонический сетап (см. `camel/societies/role_playing.py` + `examples/ai_society/role_playing.py`):
 
-```
+```text
 Человек даёт высокоуровневую task ("Develop a trading bot for the stock market")
       │
       ▼
@@ -314,7 +314,7 @@ CAMEL показывает, что *два role-playing агента — это 
 **`RoleAssignmentAgent`** заслуживает отдельного взгляда. Его промпт (строки
 86–96 в `role_assignment_agent.py`):
 
-```
+```text
 You are a role assignment agent, and you're in charge of recruiting
 {num_roles} experts for the following task.
 ==== TASK =====
@@ -340,7 +340,7 @@ ad-hoc, либо закрепить в бэклоге ролей.
 
 Промпт (`prompts/ai_society.py` строки 109–114):
 
-```
+```text
 You are a {critic_role} who teams up with a {user_role} and a {assistant_role}
 to solve a task: {task}.
 Your job is to select an option from their proposals and provides your
