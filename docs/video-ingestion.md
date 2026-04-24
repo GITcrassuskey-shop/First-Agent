@@ -8,10 +8,12 @@
 
 ## TL;DR
 
-1. **Tier 0 (default):** Gemini 2.x с `file_data.file_uri = <youtube-url>`. Один API‑вызов,
-   Google сам ингестит видео+аудио+визуальный поток, возвращает структурированный JSON.
+1. **Tier 0 (default):** Gemini 2.x через **OpenRouter** (`video_url` content type,
+   модель `google/gemini-2.5-flash`). Один API‑вызов, Gemini ингестит
+   видео+аудио+визуальный поток со своей стороны, OpenRouter выступает прокси.
+   Требует `OPENROUTER_API_KEY` + ≥$1 на балансе.
 2. **Tier 1 (fallback):** `yt-dlp` → субтитры/аудио → опционально frames+VLM через
-   OpenRouter (vision‑модель). Когда Gemini не подходит или нужен независимый канал.
+   OpenRouter free‑tier vision‑моделей. Когда Gemini недоступен или нужен независимый канал.
 3. **Tier 2 (last resort):** Playwright‑скрейпер публичных сервисов (`notegpt.io`, `kome.ai`).
    Хрупко, без визуала — только если Tier 0/1 недоступны.
 
@@ -50,60 +52,88 @@
 
 ---
 
-## 2. Tier 0 — Gemini Direct YouTube URL
+## 2. Tier 0 — Gemini через OpenRouter (YouTube URL forwarding)
 
 ### Когда использовать
 
 - Дефолт для всех новых задач.
 - Видео ≤ 1 часа (Gemini 2.x Flash) или ≤ 2 часов (Pro).
-- Публичное видео (у приватных `fileData.file_uri` отдаст 400).
+- Публичное видео (у приватных OpenRouter вернёт ошибку от Google).
+
+### Почему через OpenRouter, а не напрямую в Gemini
+
+Google AI Studio региональноограничен (Россия, Беларусь, несколько других стран),
+и ключ `GEMINI_API_KEY` на такие аккаунты не выдаётся. **OpenRouter** из своих US‑IP
+вызывает Gemini от нашего имени, и возвращает результат. Для нас это прозрачно —
+тот же ключ `OPENROUTER_API_KEY`, что и для Tier 1 VLM.
+
+Из [официальной доки OpenRouter](https://openrouter.ai/docs/features/multimodal/videos):
+
+> *"OpenRouter only sends video URLs to providers that explicitly support them.
+> For example, **Google Gemini on AI Studio only supports YouTube links**
+> (not Vertex AI)."*
 
 ### Как работает
 
-Gemini принимает YouTube URL как `fileData.file_uri` и **фетчит видео со стороны Google** —
+Gemini принимает YouTube URL как `video_url` и **фетчит видео со стороны Google** —
 с резидентной инфраструктуры, которую YouTube не блокирует. Модель одновременно
 обрабатывает аудиодорожку, auto‑captions (включая переводы), видеопоток (кадр за кадром
 на ~1 fps) и on‑screen text. Ответ — обычный текстовый/JSON аутпут.
 
-Ссылки: [Gemini API — Video Understanding](https://ai.google.dev/gemini-api/docs/video-understanding),
+Фоновые ссылки: [Gemini API — Video Understanding](https://ai.google.dev/gemini-api/docs/video-understanding),
  [практический гайд](https://gemilab.net/en/articles/gemini-api/gemini-25-pro-video-understanding-practical-guide).
 
 ### Минимальный вызов
 
 ```python
-from google import genai
-from google.genai import types
+from openai import OpenAI  # OpenRouter is OpenAI-compatible.
 
-client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents=types.Content(parts=[
-        types.Part(file_data=types.FileData(
-            file_uri="https://www.youtube.com/watch?v=VIDEO_ID",
-            mime_type="video/mp4",
-        )),
-        types.Part(text=PROMPT),  # см. knowledge/prompts/ingest-youtube-video.md
-    ]),
-    config=types.GenerateContentConfig(response_mime_type="application/json"),
+client = OpenAI(
+    api_key=os.environ["OPENROUTER_API_KEY"],
+    base_url="https://openrouter.ai/api/v1",
 )
+resp = client.chat.completions.create(
+    model="google/gemini-2.5-flash",
+    messages=[{
+        "role": "user",
+        "content": [
+            {"type": "text", "text": PROMPT},  # см. knowledge/prompts/ingest-youtube-video.md
+            {"type": "video_url", "video_url": {
+                "url": "https://www.youtube.com/watch?v=VIDEO_ID",
+            }},
+        ],
+    }],
+    response_format={"type": "json_object"},
+    max_tokens=32_000,
+)
+print(resp.choices[0].message.content)
 ```
+
+### Стоимость и гейт на балансе
+
+OpenRouter требует **≥$1 на балансе** для любых запросов с `video_url` — это гейт на
+их стороне, даже для бесплатных/дешёвых моделей. Один раз пополнил
+(https://openrouter.ai/settings/credits) — дальше каждый 45‑минутный `gemini-2.5-flash`
+вызов стоит ~$0.003. $1 = ~300 видео.
 
 ### Сильные и слабые стороны
 
-**+** Один вызов, одна зависимость, весь контекст (текст+визуал) — на стороне Google.<br/>
-**+** Стоимость на Flash ≈ $0.01–0.05 за 45‑минутное видео.<br/>
+**+** Один вызов, одна зависимость (`OPENROUTER_API_KEY`), весь контекст (текст+визуал).<br/>
+**+** Стоимость на Flash через OpenRouter ≈ $0.003–0.03 за 45‑минутное видео.<br/>
 **+** Автоматическая обработка визуального контента — без ручного sampling frames.<br/>
-**+** Нет IP‑блокировки (запрос идёт от агента → к Gemini → к YouTube).<br/>
-**−** Дневной лимит free tier: 8 часов YouTube‑видео в сутки суммарно.<br/>
-**−** Закрытая модель: нельзя inspect‑нуть, как именно она обрабатывает кадры.<br/>
+**+** Нет IP‑блокировки (OpenRouter → Gemini → YouTube, всё со своей инфры).<br/>
+**+** Обходит гео‑лок на AI Studio (ключ OpenRouter работает откуда угодно).<br/>
+**−** Требует разовый $1 топап на OpenRouter.<br/>
+**−** Закрытая модель: нельзя inspect‑нуть, как именно Gemini обрабатывает кадры.<br/>
 **−** Длинные видео (>1 ч) требуют chunking по временным окнам или Pro‑модели.
 
 ### Когда Tier 0 ломается
 
-- Видео приватное / age‑restricted / geo‑blocked → `400 INVALID_ARGUMENT`.
+- Видео приватное / age‑restricted / geo‑blocked → `400` от Google.
 - Удерживается копирайтом → Gemini вернёт «cannot access this video».
-- Превышен дневной лимит → `429 RESOURCE_EXHAUSTED`.
-- Модель возвращает truncated JSON → retry с более узким окном времени.
+- Баланс OpenRouter < $1 → `402 Payment Required`.
+- Превышен дневной лимит → `429`.
+- Модель возвращает truncated JSON → retry с более узким окном времени или переход на `gemini-2.5-pro`.
 
 В любом из этих случаев — падение на **Tier 1**.
 
@@ -271,11 +301,11 @@ Playwright против `notegpt.io` (основной) с fallback на `kome.a
 
 | Ситуация | Tier | Комментарий |
 |---|---|---|
-| Дефолт, есть `GEMINI_API_KEY` | 0 | Всегда начинаем с Tier 0. |
+| Дефолт, есть `OPENROUTER_API_KEY` + баланс ≥ $1 | 0 | Всегда начинаем с Tier 0. |
 | Видео > 2 часа | 0 или 1 | Tier 0 с chunking окнами по 1 часу, либо Tier 1 + ASR. |
 | Видео приватное (unlisted + shared) | 1 | Tier 0 не сможет (нужна auth в YouTube). |
 | Нужна проверка «слово‑в‑слово» | 1 | Whisper даёт verbatim; Gemini перефразирует. |
-| Нет `GEMINI_API_KEY` | 1 | Ставим `OPENROUTER_API_KEY` и идём. |
+| Есть `OPENROUTER_API_KEY`, но баланс < $1 | 1 | VLM free‑tier работает; Tier 0 нет. |
 | Нет никаких API‑ключей | 2 | Переваливаемся на скрейпер, готовим нормальные ключи. |
 | Тема = визуальная (архитектурные видео, code walkthrough) | 0 | У Gemini лучший VLM `baked in`. |
 | Тема = чисто речевая (подкаст, интервью) | 0 или 1 без frames | Визуал не нужен, можно опустить шаг 3.2–3.4. |
@@ -312,9 +342,12 @@ artifacts/<video_id>/
 
 | Secret | Тир | Обязательный? | Где получить |
 |---|---|---|---|
-| `GEMINI_API_KEY` | 0 | Да | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
-| `OPENROUTER_API_KEY` | 1 | Для VLM | [openrouter.ai/keys](https://openrouter.ai/keys) |
-| `GROQ_API_KEY` | 1 | Опционально | [console.groq.com/keys](https://console.groq.com/keys) |
+| `OPENROUTER_API_KEY` | 0, 1 | Да | [openrouter.ai/keys](https://openrouter.ai/keys) |
+| Баланс OpenRouter ≥ $1 | 0 | Да (гейт на video inputs) | [openrouter.ai/settings/credits](https://openrouter.ai/settings/credits) |
+| `GROQ_API_KEY` | 1 | Опционально (ASR) | [console.groq.com/keys](https://console.groq.com/keys) |
+
+Прямой `GEMINI_API_KEY` **не требуется** и в некоторых регионах недоступен (гео‑лок
+Google AI Studio). Мы используем Gemini через OpenRouter — см. §2.
 
 YouTube `cookies.txt` — **не нужен для Tier 0**. Может помочь Tier 1 на тех редких
 видео, где `yt-dlp` видит `LOGIN_REQUIRED`. Экспорт только с домашнего Chrome
@@ -336,11 +369,12 @@ YouTube `cookies.txt` — **не нужен для Tier 0**. Может помо
 - `ffmpeg -ss` **до** `-i` — seek по ключевым кадрам (быстро, может промахнуться
   на 1–2 сек). **После** `-i` — точный, но читает файл от начала до T.
   Для наших таймкодов хватает быстрого варианта.
-- Gemini `file_data` требует `mime_type: "video/mp4"` даже для YouTube URL,
-  иначе `400`.
+- OpenRouter гейтит video inputs порогом $1 балансa — **для ЛЮБОЙ модели**, включая
+  бесплатные. `402 Payment Required` при пустом балансе. Это policy OpenRouter,
+  а не цена вызова (сам Flash‑запрос стоит $0.003).
 - Gemini response size: JSON со всеми концептами для 45‑минутного видео =
-  ~30–50KB. Если уткнулись в `response.candidates[0].finish_reason == "MAX_TOKENS"` —
-  надо поднять `max_output_tokens` или разбить запрос по временным окнам.
+  ~30–50KB. Если уткнулись в `finish_reason == "length"` —
+  надо поднять `max_tokens` или разбить запрос по временным окнам.
 
 ---
 

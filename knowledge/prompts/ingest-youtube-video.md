@@ -21,10 +21,13 @@ Turn a single YouTube video at <url> into a canonical research note at
 
 [Approach]
 1. **Select tier.** Default `auto`:
-   - If `GEMINI_API_KEY` set → Tier 0.
-   - Else if `OPENROUTER_API_KEY` set → Tier 1 (with `GROQ_API_KEY` for ASR if no yt-dlp captions).
-   - Else → Tier 2.
+   - If `OPENROUTER_API_KEY` set AND OpenRouter balance ≥ $1 → Tier 0
+     (Gemini‑via‑OpenRouter, includes visual understanding).
+   - Else if `OPENROUTER_API_KEY` set but no balance → Tier 1
+     (yt‑dlp + optional VLM free‑tier pass; `GROQ_API_KEY` for ASR fallback).
+   - Else → Tier 2 (scraper, no visuals).
    - Record the chosen tier and any fallbacks in `meta.json.tier_used` / `tried_tiers`.
+   - On `402 Payment Required` from Tier 0, fall through to Tier 1 automatically.
 2. **Run ingestion** via `video-ingestion-poc/ingest.py`:
    ```
    python knowledge/research/video-ingestion-poc/ingest.py <url> --tier <tier> \

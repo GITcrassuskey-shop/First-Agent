@@ -14,8 +14,9 @@ Usage
 
 Environment
 -----------
-    GEMINI_API_KEY        # required for Tier 0
-    OPENROUTER_API_KEY    # required for Tier 1 visual pass
+    OPENROUTER_API_KEY    # Tier 0 (Gemini via OpenRouter) and Tier 1 VLM.
+                          # Video inputs require >= $1 OpenRouter balance;
+                          # regular chat/image inputs work on free tier.
     GROQ_API_KEY          # optional, Tier 1 Whisper fallback
     YT_DLP_COOKIES        # optional, path to cookies.txt for Tier 1
 
@@ -43,8 +44,12 @@ from urllib.parse import parse_qs, urlparse
 # -- constants ---------------------------------------------------------------
 
 DEFAULT_OUT_DIR = Path("artifacts")
-GEMINI_MODEL = "gemini-2.5-flash"
-GEMINI_MODEL_FALLBACK = "gemini-2.5-pro"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+# Tier 0: Gemini via OpenRouter (OpenRouter forwards YouTube URLs to Gemini on
+# AI Studio). Chosen over direct google-genai SDK to bypass region blocks on
+# Google AI Studio keys (OpenRouter calls Gemini from US infra).
+TIER0_VIDEO_MODEL = "google/gemini-2.5-flash"
+TIER0_VIDEO_MODEL_FALLBACK = "google/gemini-2.5-pro"
 OPENROUTER_VLM_MODEL = "qwen/qwen2.5-vl-72b-instruct:free"
 OPENROUTER_VLM_FALLBACK = "meta-llama/llama-3.2-11b-vision-instruct:free"
 GROQ_ASR_MODEL = "whisper-large-v3-turbo"
@@ -207,10 +212,10 @@ def select_salient_timestamps(
     return deduped
 
 
-# -- Tier 0 — Gemini Direct YouTube -----------------------------------------
+# -- Tier 0 — Gemini via OpenRouter (YouTube URL forwarding) ------------------
 
 
-GEMINI_PROMPT = """\
+TIER0_PROMPT = """\
 You are ingesting a public YouTube video for a research agent. Return a JSON
 object with exactly these fields (and nothing else):
 
@@ -244,49 +249,54 @@ Rules:
 """
 
 
-def ingest_tier0_gemini(url: str, out_dir: Path, meta: VideoMeta) -> bool:
-    """Use Gemini's native YouTube URL ingest. Returns True on success."""
-    try:
-        from google import genai
-        from google.genai import types
-    except ImportError:
-        meta.errors.append("tier0: google-genai not installed")
-        return False
+def ingest_tier0_openrouter_gemini(url: str, out_dir: Path, meta: VideoMeta) -> bool:
+    """Send the YouTube URL to Gemini via OpenRouter's video_url content type.
 
-    api_key = os.environ.get("GEMINI_API_KEY")
+    OpenRouter forwards YouTube URLs to ``google/gemini-*`` models on AI Studio
+    (see https://openrouter.ai/docs/features/multimodal/videos). This path
+    works from regions where direct Google AI Studio access is blocked, because
+    OpenRouter itself calls Google from its own infra.
+    """
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
-        meta.errors.append("tier0: GEMINI_API_KEY not set")
+        meta.errors.append("tier0: OPENROUTER_API_KEY not set")
         return False
 
-    client = genai.Client(api_key=api_key)
-    contents = types.Content(parts=[
-        types.Part(file_data=types.FileData(
-            file_uri=url, mime_type="video/mp4"
-        )),
-        types.Part(text=GEMINI_PROMPT),
-    ])
-    config = types.GenerateContentConfig(
-        response_mime_type="application/json",
-        max_output_tokens=64_000,
-    )
+    try:
+        from openai import OpenAI
+    except ImportError:
+        meta.errors.append("tier0: openai package not installed")
+        return False
 
-    for model in (GEMINI_MODEL, GEMINI_MODEL_FALLBACK):
+    client = OpenAI(api_key=api_key, base_url=OPENROUTER_BASE_URL)
+    messages = [{
+        "role": "user",
+        "content": [
+            {"type": "text", "text": TIER0_PROMPT},
+            {"type": "video_url", "video_url": {"url": url}},
+        ],
+    }]
+
+    for model in (TIER0_VIDEO_MODEL, TIER0_VIDEO_MODEL_FALLBACK):
         try:
-            resp = client.models.generate_content(
-                model=model, contents=contents, config=config
+            resp = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                response_format={"type": "json_object"},
+                max_tokens=32_000,
             )
         except Exception as e:  # noqa: BLE001
             meta.errors.append(f"tier0: {model} raised {type(e).__name__}: {e}")
             continue
 
-        raw_path = out_dir / "raw" / "gemini_response.json"
+        raw_text = resp.choices[0].message.content or ""
+        raw_path = out_dir / "raw" / "tier0_response.json"
         raw_path.parent.mkdir(parents=True, exist_ok=True)
-        raw_path.write_text(resp.text, encoding="utf-8")
+        raw_path.write_text(raw_text, encoding="utf-8")
 
-        try:
-            data = json.loads(resp.text)
-        except json.JSONDecodeError as e:
-            meta.errors.append(f"tier0: {model} returned non-JSON: {e}")
+        data = _parse_json_lenient(raw_text)
+        if data is None:
+            meta.errors.append(f"tier0: {model} returned non-JSON (len={len(raw_text)})")
             continue
 
         meta.title = data.get("title")
@@ -300,16 +310,17 @@ def ingest_tier0_gemini(url: str, out_dir: Path, meta: VideoMeta) -> bool:
                 text=item["text"],
             )
             for item in data.get("transcript", [])
+            if item.get("t") and item.get("text")
         ]
         visual_notes = {
             _hms_to_sec(v["t"]): v["description"]
             for v in data.get("visual_callouts", [])
+            if v.get("t") and v.get("description")
         }
 
         write_transcript_md(
             out_dir / "transcript.md", segments, meta, visual_notes
         )
-        # Persist structured extras next to transcript for downstream use.
         (out_dir / "key_concepts.json").write_text(
             json.dumps(
                 {
@@ -325,6 +336,33 @@ def ingest_tier0_gemini(url: str, out_dir: Path, meta: VideoMeta) -> bool:
         )
         return True
     return False
+
+
+def _parse_json_lenient(text: str) -> Optional[dict]:
+    """Parse JSON, tolerating ```json fences or stray prose around the object."""
+    text = text.strip()
+    if not text:
+        return None
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    # Strip markdown fences.
+    m = re.search(r"```(?:json)?\s*(\{.*\})\s*```", text, re.DOTALL)
+    if m:
+        try:
+            return json.loads(m.group(1))
+        except json.JSONDecodeError:
+            pass
+    # Last resort: first { to last }.
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end > start:
+        try:
+            return json.loads(text[start : end + 1])
+        except json.JSONDecodeError:
+            return None
+    return None
 
 
 def _hms_to_sec(hms: str) -> float:
@@ -607,7 +645,7 @@ def ingest_tier2_scraper(url: str, out_dir: Path, meta: VideoMeta) -> bool:
 def select_tiers(user_choice: str) -> list[str]:
     if user_choice == "auto":
         tiers: list[str] = []
-        if os.environ.get("GEMINI_API_KEY"):
+        if os.environ.get("OPENROUTER_API_KEY"):
             tiers.append("0")
         if shutil.which("yt-dlp"):
             tiers.append("1")
@@ -628,7 +666,7 @@ def run(url: str, tier_choice: str, out_root: Path) -> int:
         started = time.time()
         ok = False
         if tier == "0":
-            ok = ingest_tier0_gemini(url, out_dir, meta)
+            ok = ingest_tier0_openrouter_gemini(url, out_dir, meta)
         elif tier == "1":
             ok = ingest_tier1_ytdlp(url, out_dir, meta)
         elif tier == "2":

@@ -14,26 +14,28 @@
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -U google-genai openai yt-dlp
+pip install -U openai yt-dlp
 ```
 
 Системные зависимости:
 
 - `ffmpeg` — для извлечения кадров в Tier 1.
-- `yt-dlp` — можно ставить через `pip`, тогда deno/node не требуются для большинства
+- `yt-dlp` — ставится через `pip`, JS‑рантайм (deno/node) не требуется для большинства
   публичных видео.
 
 ## Секреты (ENV)
 
 | Переменная | Тир | Обязательный? |
 |---|---|---|
-| `GEMINI_API_KEY` | 0 | Для Tier 0 |
-| `OPENROUTER_API_KEY` | 1 | Для визуального прохода Tier 1 |
-| `GROQ_API_KEY` | 1 | Если yt‑dlp не смог получить субтитры |
+| `OPENROUTER_API_KEY` | 0, 1 | Tier 0 (Gemini‑via‑OpenRouter) и Tier 1 VLM |
+| `GROQ_API_KEY` | 1 | Если yt‑dlp не смог получить субтитры (Whisper fallback) |
 | `YT_DLP_COOKIES` | 1 | Путь к `cookies.txt` (опционально) |
 
-Если ничего не задано — `--tier auto` свалится сразу на Tier 2 (заглушка).
-На живой сессии Devin секреты приходят из env платформы.
+**Важно:** OpenRouter требует ≥$1 на балансе для запросов с `video_url` — это гейт
+на их стороне, даже для бесплатных моделей. Пополнение:
+https://openrouter.ai/settings/credits . Без баланса вернётся `402 Payment Required`,
+и `--tier auto` свалится на Tier 1 (VLM free‑tier продолжает работать без $1).
+На живой сессии Devin секрет приходит из env платформы.
 
 ## Запуск
 
@@ -63,7 +65,7 @@ artifacts/<video_id>/
 │   └── HH-MM-SS.jpg
 ├── vlm.jsonl              # только Tier 1: по одной строке на кадр
 └── raw/
-    ├── gemini_response.json   # или
+    ├── tier0_response.json    # или
     └── ytdlp_info.json
 ```
 
