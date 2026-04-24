@@ -46,3 +46,4 @@ last-reviewed: YYYY-MM-DD
 | File | Purpose |
 |---|---|
 | [`research-topic.md`](./research-topic.md) | Research `<topic>` and produce a structured note. |
+| [`ingest-youtube-video.md`](./ingest-youtube-video.md) | Turn a YouTube URL into a canonical research note via the tiered ingestion workflow. See [`docs/video-ingestion.md`](../../docs/video-ingestion.md). |

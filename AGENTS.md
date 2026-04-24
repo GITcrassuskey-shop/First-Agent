@@ -12,7 +12,7 @@
 
 - [`README.md`](./README.md) — единый обзор проекта (на русском).
 - [`AGENTS.md`](./AGENTS.md) — этот файл.
-- [`docs/`](./docs/README.md) — вики по работе с Devin (6 файлов).
+- [`docs/`](./docs/README.md) — вики по работе с Devin (7 файлов).
   - `architecture.md` — архитектура LLM-агента.
   - `workflow.md` — процесс Research → Scaffolding → Module.
   - `prompting.md` — шаблоны промптов (T1–T5).
@@ -20,6 +20,7 @@
   - `glossary.md`.
   - `agent creation github.md` — конспект туториала
     [build-your-own-openclaw](https://github.com/czl9707/build-your-own-openclaw).
+  - `video-ingestion.md` — трёхслойный workflow приёма YouTube‑видео.
 - [`knowledge/`](./knowledge/README.md) — долговременная память проекта
   (project-overview, ADR, переиспользуемые промпты).
 
