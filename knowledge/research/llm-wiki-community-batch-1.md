@@ -276,6 +276,12 @@ SWE-bench · 3 models · 10/0/0 DeepSeek**» — это **n=10 patches на од
 prompt-инженерию. Заявленная p=0.040 на n=5 (другой бенчмарк) — это уже
 почти шум в статистическом смысле.
 
+> **Дополнено 2026-04-26.** Здесь зафиксирован только первый
+> проход по codedna (`rules:` + `used_by:`). Эволюция протокола в
+> v0.8/v0.9 (`agent:` rolling log, `message:` soft-channel,
+> `wiki:` pointer, git-trailers как audit log) разобрана отдельно
+> в [`agentic-memory-supplement.md` §3](./agentic-memory-supplement.md).
+
 ## 4. Кросс-резка: что *реально* работает
 
 ### 4.1 Tier 1 — паттерны, повторяющиеся в 2+ проектах

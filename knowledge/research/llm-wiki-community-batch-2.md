@@ -130,6 +130,12 @@ ingest, search, decision-log и т.п.). Trust boundary через
 v0.1 (filesystem проще), MCP-сервера до тех пор, пока нет агентов-
 клиентов (преждевременный API).
 
+> **Дополнено 2026-04-26.** Operations contract (`src/core/operations.ts`
+> как single source of truth для CLI+MCP), `RESOLVER.md` skill
+> dispatcher, always-on parallel skills, `llms.txt`/`llms-full.txt`
+> documentation protocol — разобраны отдельно в
+> [`agentic-memory-supplement.md` §4](./agentic-memory-supplement.md).
+
 ### 3.2. llm-wiki-kit (MauricioPerera, 10⭐, MIT)
 
 **Источник:** [MauricioPerera/llm-wiki-kit](https://github.com/MauricioPerera/llm-wiki-kit).
@@ -214,6 +220,11 @@ derived view + disposable manifest*, *page-type ontology*, *maturity
 lifecycle*, *ingest --prepare/--finalize as protocol*, *thin adapter
 discipline + guard tests*. Отказываемся от: Go (наш план — Python);
 SQLite-manifest на v0.1 (jsonl-файла достаточно).
+
+> **Дополнено 2026-04-26.** Contract-in-binary + multi-harness
+> `init --agent X`, hint-not-classify pattern, architecture guard
+> test, SQLite WAL + concurrent-ingest lock — разобраны отдельно
+> в [`agentic-memory-supplement.md` §5](./agentic-memory-supplement.md).
 
 ### 3.5. mnemovault (kimsiwon-osifa7878, 10⭐, MIT)
 
