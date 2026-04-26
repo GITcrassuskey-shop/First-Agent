@@ -228,21 +228,31 @@ Architect/Planner — отдельная роль внутри multi-agent ст�
 Compact-вариант — [`knowledge/prompts/architect-fa-compact.md`](../prompts/architect-fa-compact.md).
 Здесь — карта секций, чтобы можно было быстро ориентироваться.
 
-| Секция | Что делает |
-|---|---|
-| Operating priorities | 8-пунктовый приоритет от correctness до token efficiency. |
-| Hard rules | Жёсткие запреты: no invented facts, no code, no cross-step refs, no judgment-based accept. |
-| Step 1 — Classify | TRIVIAL / STANDARD / LARGE; misclassify-down OK. |
-| Step 2 — Bounded recon | Бюджеты 4 / 8 / 16 reads-or-searches; recon priority generalized. |
-| Step 3 — Decide vs block | MUST-block (4 кейса) / MAY-block (interactive only) / Otherwise decide. |
-| Step 4 — Plan format | Единый формат с разделами Class/Goal/Evidence/Scope/Assumptions/Constraints/Plan/Verification/Risks/Open questions. |
-| Step writing rules | 7 правил для шагов, ориентированных на слабый coder. |
-| Acceptance Taxonomy | 11 шаблонов литеральных предикатов; список запрещённых форм. |
-| Verification | focused / regression / manual; всё repo-native. |
-| Step 5 — Pre-output self-check | 11 пунктов, items 3/4/6/7 — hard fail. |
-| Step 6 — Delta Plan | Trigger / Keep / Invalidate / Replace / Updated verification. |
-| Anti-patterns | Список того, что **не** делать. |
-| Worked example | Один TRIVIAL пример с заполненными полями (формат-якорь). |
+- **Operating priorities** — 8-пунктовый приоритет от correctness до
+  token efficiency.
+- **Hard rules** — жёсткие запреты: no invented facts, no code, no
+  cross-step refs, no judgment-based accept.
+- **Step 1 — Classify** — TRIVIAL / STANDARD / LARGE; misclassify-down
+  OK.
+- **Step 2 — Bounded recon** — бюджеты 4 / 8 / 16 reads-or-searches;
+  recon priority generalized.
+- **Step 3 — Decide vs block** — MUST-block (4 кейса) / MAY-block
+  (interactive only) / Otherwise decide.
+- **Step 4 — Plan format** — единый формат с разделами Class / Goal /
+  Evidence / Scope / Assumptions / Constraints / Plan / Verification /
+  Risks / Open questions.
+- **Step writing rules** — 7 правил для шагов, ориентированных на
+  слабый coder.
+- **Acceptance Taxonomy** — 11 шаблонов литеральных предикатов; список
+  запрещённых форм.
+- **Verification** — focused / regression / manual; всё repo-native.
+- **Step 5 — Pre-output self-check** — 11 пунктов, items 3/4/6/7 —
+  hard fail.
+- **Step 6 — Delta Plan** — Trigger / Keep / Invalidate / Replace /
+  Updated verification.
+- **Anti-patterns** — список того, что **не** делать.
+- **Worked example** — один TRIVIAL пример с заполненными полями
+  (формат-якорь).
 
 ## 6. Почему v2.1 должен работать лучше
 
@@ -287,20 +297,37 @@ Compact-вариант — [`knowledge/prompts/architect-fa-compact.md`](../prom
 в v2.1 включены — в облегчённой форме — следующие, и явно отвергнуты
 другие:
 
-| Улучшение | Решение | Как |
-|---|---|---|
-| DAG вместо линейного списка (TDP, GraSP) | Облегчённо | `deps:[Sx]` per step. Без явных graph-схем. |
-| Pre-mortem (Klein 1998) | Включено облегчённо | Один внутренний проход в Step 5; только task-specific риски. |
-| Формальная верификация / model checking (VeriPlan) | Не в промпт | Это работа кода (валидатор схемы плана), не промпта. |
-| Critical Path | Отвергнуто | `estimated_complexity` не калиброван; CP на нём хуже, чем без него. |
-| Типизированные рёбра зависимостей (GraSP) | Отвергнуто | Schema bloat; planner может выразить тип в `do:` когда это важно. |
-| WHO checklist (6 yes/no per step) | Облегчённо | Один pre-output self-check на 11 пунктов вместо 6 per step. |
-| OODA loop | Отвергнуто как named framework | Заменено циклом probe → plan → execute → replan. |
-| WBS hierarchy | Включено условно | Phases для LARGE-задач; не по умолчанию. |
-| Self-Verifying Reflection | Включено | Pre-output self-check, hard fail на items 3/4/6/7. |
-| Design by Contract per step | Отвергнуто | Pre/post/invariant — filler; одного `accept` достаточно. |
-| Confidence scoring | Отвергнуто | LLM-калибровка плохая; цифры будут вводить в заблуждение. |
-| Explicit context budget meter | Отвергнуто | Модель не считает токены; заменено stop-rules. |
+**Включено (в облегчённой форме):**
+
+- **DAG вместо линейного списка** (TDP, GraSP). Реализация: поле `deps:
+  [Sx]` на шаг. Без явных graph-схем — слабые модели их не держат.
+- **Pre-mortem** (Klein 1998). Реализация: один внутренний проход в
+  Step 5; в план попадают только task-specific риски, без generic
+  filler'а.
+- **WHO checklist** (Haynes 2009). Реализация: один pre-output
+  self-check из 11 пунктов вместо 6 yes/no на каждый шаг.
+- **WBS hierarchy** — условно. Реализация: phases в LARGE-задачах; не
+  по умолчанию для STANDARD.
+- **Self-Verifying Reflection.** Реализация: pre-output self-check;
+  items 3/4/6/7 — hard fail перед emit.
+
+**Отвергнуто (с причиной):**
+
+- **Формальная верификация / model checking** (VeriPlan). Это работа
+  кода (структурный валидатор плана в orchestrator'е), не промпта.
+  Помечено как Phase-2 follow-up в §11.
+- **Critical Path.** Поле `estimated_complexity` не калиброванно у LLM;
+  CP, построенный на таких оценках, хуже, чем его отсутствие.
+- **Типизированные рёбра зависимостей** (GraSP). Schema bloat; planner
+  может выразить тип зависимости в `do:` когда это важно.
+- **OODA loop как named framework.** Имя добавляет нагрузку без
+  выигрыша; заменено явным циклом probe → plan → execute → replan.
+- **Design by Contract per step.** `pre`/`post`/`invariant` — filler в
+  90% случаев; одного `accept` достаточно.
+- **Confidence scoring.** LLM-калибровка слабая; цифры вводят в
+  заблуждение даже когда выглядят авторитетно.
+- **Explicit context budget meter.** Модель не считает токены; правила
+  «stop when next read won't change …» работают надёжнее цифр.
 
 ## 8. Two-tier blocking — тонкости
 

@@ -46,8 +46,8 @@ last-reviewed: YYYY-MM-DD
 | File | Purpose |
 |---|---|
 | [`research-topic.md`](./research-topic.md) | Research `<topic>` and produce a structured note. |
-| [`architect-fa.md`](./architect-fa.md) | Architect/Planner system prompt (full) for the Agent-FA multi-agent stack. |
-| [`architect-fa-compact.md`](./architect-fa-compact.md) | Architect/Planner system prompt (compact) — token-tight contexts. |
+| [`architect-fa.md`](./architect-fa.md) | Architect/Planner system prompt (full). |
+| [`architect-fa-compact.md`](./architect-fa-compact.md) | Architect/Planner system prompt (compact). |
 
 ## Note on system prompts vs. task prompts
 
