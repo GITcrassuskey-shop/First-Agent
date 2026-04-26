@@ -12,7 +12,8 @@ Details: [`README.md`](./README.md).
 
 - [`README.md`](./README.md) — project overview.
 - [`AGENTS.md`](./AGENTS.md) — this file.
-- [`docs/`](./docs/README.md) — wiki (architecture, workflow, prompting, devin-reference, glossary, agent creation tutorial).
+- [`docs/`](./docs/README.md) — wiki (architecture, workflow,
+  prompting, devin-reference, glossary, agent creation tutorial).
 - [`knowledge/`](./knowledge/README.md) — durable memory (project-overview, ADR, prompts, research).
 
 ## Working in This Repo
@@ -54,15 +55,19 @@ Route questions to the right folder. Do not load everything into context.
 |---|---|---|
 | Architecture, patterns | [`docs/architecture.md`](./docs/architecture.md) | ADR |
 | Decisions and rationale | [`knowledge/adr/`](./knowledge/adr/) | — |
-| Workflow, how to use Devin | [`docs/workflow.md`](./docs/workflow.md), [`docs/devin-reference.md`](./docs/devin-reference.md) | — |
+| Workflow, Devin usage | `docs/workflow.md`, `docs/devin-reference.md` | — |
 | Research findings | [`knowledge/research/`](./knowledge/research/) | Primary sources from `source:` frontmatter |
 | Specific number / date / quote | **Primary source** (URL / code / gist), not a summary note | — |
 | Terms | [`docs/glossary.md`](./docs/glossary.md) | — |
 
-**Chain-of-custody rule.** If citing a specific number, date, name, or decision — go to the primary source and quote from there. Summaries in `knowledge/research/` are pointers, not authoritative sources.
+**Chain-of-custody rule.** If citing a specific number, date, name,
+or decision — go to the primary source and quote from there.
+Summaries in `knowledge/research/` are pointers, not authoritative
+sources.
 Rationale: [`knowledge/research/llm-wiki-critique.md`](./knowledge/research/llm-wiki-critique.md).
 
-**Supersession, not overwrite.** Never silently overwrite an outdated note. Mark it `> **Status:** superseded by <link>` and keep for audit.
+**Supersession, not overwrite.** Never silently overwrite an outdated
+note. Mark it `> **Status:** superseded by <link>` and keep for audit.
 
 ## Testing
 
