@@ -567,7 +567,7 @@ feat: complete inbox enrichment backend pass`). Кратко по сути:
 
 ### 5.1 Цикл inbox-item
 
-```
+```text
 [capture]  create_inbox_text | create_inbox_link | import_inbox_files
    ↓ writes  inbox/<slug>.md  with frontmatter (kind, status: New, ...)
 [normalize]  normalize_inbox_item / normalize_inbox_batch
