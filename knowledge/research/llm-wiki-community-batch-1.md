@@ -1,6 +1,6 @@
 ---
 title: "Сообщество LLM-Wiki — батч 1: что из этого реально работает в продакшне"
-date: 2026-04-26
+compiled: "2026-04-26"
 source:
   - https://github.com/JuliusBrussee/cavemem
   - https://github.com/Larens94/codedna

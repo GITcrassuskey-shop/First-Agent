@@ -24,7 +24,12 @@ knowledge/
 ## Conventions
 
 - One concept per file.
-- Markdown only. Keep under ~250 lines — split if longer.
+- Markdown only. Keep under **~500 lines**; split if much longer. Раньше
+  здесь стояло ~250 — повышено сознательно: исследовательские заметки часто
+  ложатся в 300–450 строк без потери связности, а более жёсткий лимит
+  заставлял дробить файлы там, где это вредит читаемости. Если файл
+  стабильно лезет за 500 — это сигнал, что внутри живут две разные темы;
+  тогда расщепляем по теме, а не по объёму.
 - Link to source URLs for any non-obvious claim.
 - **Never silently overwrite.** When a file is superseded: mark the old
   file with `> **Status:** superseded by <link>` at the top, add a
