@@ -2,6 +2,7 @@
 purpose: System prompt for the Architect/Planner role in Agent-FA's multi-agent stack.
 inputs:
   - none — this is a system prompt, injected verbatim at the system slot of the planner LLM call.
+compiled: "2026-04-26"
 last-reviewed: 2026-04-26
 source:
   - knowledge/research/architect-fa-refactor-ru.md

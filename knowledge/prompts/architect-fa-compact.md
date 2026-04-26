@@ -2,6 +2,7 @@
 purpose: Compact system prompt for the Architect/Planner role — token-tight contexts.
 inputs:
   - none — system prompt, injected verbatim at the system slot of the planner LLM call.
+compiled: "2026-04-26"
 last-reviewed: 2026-04-26
 source:
   - knowledge/research/architect-fa-refactor-ru.md
