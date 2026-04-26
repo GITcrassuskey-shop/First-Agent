@@ -1,109 +1,80 @@
 # AGENTS.md
 
-Короткая инструкция для AI-агентов (Devin и подобных), работающих в этом репо.
+Instructions for AI agents (Devin and similar) working in this repo.
 
 ## Project Overview
 
-**First-Agent** — исследовательский проект по созданию собственного LLM-агента.
-Стадия: `research → start of module creation`. Кода в `src/` пока нет — сначала
-идёт research-фаза с заметками и ADR. Подробности — в [`README.md`](./README.md).
+**First-Agent** — LLM agent research project.
+Stage: `research → start of module creation`. No code in `src/` yet.
+Details: [`README.md`](./README.md).
 
 ## Repository Structure
 
-- [`README.md`](./README.md) — единый обзор проекта (на русском).
-- [`AGENTS.md`](./AGENTS.md) — этот файл.
-- [`docs/`](./docs/README.md) — вики по работе с Devin (6 файлов).
-  - `architecture.md` — архитектура LLM-агента.
-  - `workflow.md` — процесс Research → Scaffolding → Module.
-  - `prompting.md` — шаблоны промптов (T1–T5).
-  - `devin-reference.md` — справочник по Devin.
-  - `glossary.md`.
-  - `agent creation github.md` — конспект туториала
-    [build-your-own-openclaw](https://github.com/czl9707/build-your-own-openclaw).
-- [`knowledge/`](./knowledge/README.md) — долговременная память проекта
-  (project-overview, ADR, переиспользуемые промпты).
+- [`README.md`](./README.md) — project overview.
+- [`AGENTS.md`](./AGENTS.md) — this file.
+- [`docs/`](./docs/README.md) — wiki (architecture, workflow, prompting, devin-reference, glossary, agent creation tutorial).
+- [`knowledge/`](./knowledge/README.md) — durable memory (project-overview, ADR, prompts, research).
 
 ## Working in This Repo
 
-- Всё документация — Markdown. ATX-заголовки (`#`, `##`), fenced code blocks с
-  указанием языка, строки желательно ≤ 120 символов.
-- Новые документы кладём в правильную подпапку:
-  - Справочная/гайдовая дока → `docs/`.
-  - Проектные артефакты (решения, исследование, промпты) → `knowledge/`.
-- При добавлении нового файла в `docs/` — обновляем
-  [`docs/README.md`](./docs/README.md).
-- При значимом архитектурном решении — создаём ADR из шаблона
-  [`knowledge/adr/0000-template.md`](./knowledge/adr/0000-template.md).
+- All documentation is Markdown. ATX headings (`#`, `##`), lines ≤ 120 chars.
+- Fenced code blocks — always with a language tag:
+  - Code: `python`, `yaml`, `json`, `bash`.
+  - Non-code (ASCII art, directory trees, prompts, logs): `text`.
+  - Never leave a bare ` ``` `.
+- New docs go in the right folder:
+  - Guides / references → `docs/`. Update [`docs/README.md`](./docs/README.md).
+  - Project artifacts (decisions, research, prompts) → `knowledge/`.
+- Architectural decisions → ADR from [`knowledge/adr/0000-template.md`](./knowledge/adr/0000-template.md).
 
-### PR-review checklist (prevent auto-review noise)
+## PR Checklist
 
-Перед тем как открыть PR, проверь эти пункты — каждый из них ранее
-вызывал цикл «бот комментирует → агент чинит → бот подтверждает»,
-тратя токены впустую.
+Verify before opening a PR. Each item has triggered wasted review cycles.
 
-1. **Fenced code blocks — всегда с языком.** Каждый открывающий ` ``` `
-   должен иметь language tag: `` ```python ``, `` ```yaml ``,
-   `` ```text `` (для ASCII-диаграмм, деревьев каталогов, промптов).
-   Закрывающие ` ``` ` остаются без тега. *Нет «просто блока кода».*
-2. **Frontmatter: `compiled:`, не `date:`.** В `knowledge/research/`
-   используем `compiled: "YYYY-MM-DD"` (см.
-   [`knowledge/README.md`](./knowledge/README.md#provenance-frontmatter-для-research-и-любых-summary-заметок)).
-   Поле `date:` бот не распознаёт и будет просить переименовать.
-3. **Длина файла — два лимита.**
-   - Обычные заметки / summaries: **~500 строк**.
-   - Deep-dive / detailed research: **~1 200 строк**.
-   - Подробности — в [`knowledge/README.md` §Conventions](./knowledge/README.md#conventions).
-4. **Chain-of-custody дат.** Если `compiled:` = `2026-04-23`, а в тексте
-   цитируешь факт с датой после 23-го — бот поймает temporal
-   inconsistency. Либо обнови `compiled`, либо убери непроверяемую дату.
-5. **Supersession, не overwrite.** Старый файл не удаляем — помечаем
-   `> **Status:** superseded by <link>` и оставляем для аудита.
+1. **Code fences have language tags.** No bare ` ``` `. See rule above.
+2. **Frontmatter uses `compiled:`, not `date:`.** Schema: [`knowledge/README.md`](./knowledge/README.md#conventions).
+3. **File length within tier limits.**
+   - Summaries / overviews: **~500 lines**.
+   - Deep-dive research: **~1 200 lines**.
+4. **`compiled:` date ≥ all dates cited in text.** No temporal impossibilities.
+5. **Supersession, not overwrite.** Mark old file `> **Status:** superseded by <link>`. Keep for audit.
 
 ## Development Workflow
 
-- Ветки: `devin/<timestamp>-<slug>` от `main`.
-- Все изменения — через Pull Request.
-- Коммит-сообщения описательные, по-английски, настоящее время
-  (`docs: add architecture note`, `adr: pick orchestration style`).
-- В `main` ничего не пушим напрямую.
+- Branch: `devin/<timestamp>-<slug>` from `main`.
+- All changes via Pull Request.
+- Commit messages: descriptive, English, present tense (`docs: add architecture note`).
+- Never push directly to `main`.
 
 ## Query Routing
 
-Когда нужно ответить на вопрос по проекту — **ищи по правильной папке**,
-не загружай всё подряд в контекст.
+Route questions to the right folder. Do not load everything into context.
 
-| Тип вопроса | Куда идти первым | Верификация |
+| Question type | Look first | Verify with |
 |---|---|---|
-| Архитектура, трёхслойная модель, паттерны | [`docs/architecture.md`](./docs/architecture.md) | ADR |
-| Принятое решение и причины | [`knowledge/adr/`](./knowledge/adr/) | — |
-| Процесс, workflow, как работать с Devin | [`docs/workflow.md`](./docs/workflow.md), [`docs/devin-reference.md`](./docs/devin-reference.md) | — |
-| Результат исследования (critique, сравнение, landscape) | [`knowledge/research/`](./knowledge/research/) | Первоисточники из `source:` во frontmatter заметки |
-| Конкретное число / дата / цитата | **Первоисточник** (URL / код / gist), не summary-заметка | — |
-| Термины | [`docs/glossary.md`](./docs/glossary.md) | — |
+| Architecture, patterns | [`docs/architecture.md`](./docs/architecture.md) | ADR |
+| Decisions and rationale | [`knowledge/adr/`](./knowledge/adr/) | — |
+| Workflow, how to use Devin | [`docs/workflow.md`](./docs/workflow.md), [`docs/devin-reference.md`](./docs/devin-reference.md) | — |
+| Research findings | [`knowledge/research/`](./knowledge/research/) | Primary sources from `source:` frontmatter |
+| Specific number / date / quote | **Primary source** (URL / code / gist), not a summary note | — |
+| Terms | [`docs/glossary.md`](./docs/glossary.md) | — |
 
-**Chain-of-custody rule.** Если в ответе участвует конкретная цифра,
-дата, имя или решение — идти в первоисточник (URL, код, gist) и
-цитировать *оттуда*. Не цитировать summary в `knowledge/research/` как
-«авторитетный источник» для специфики; summary — это *указатель на
-источник*, не сам источник. Обоснование и разбор failure mode — в
-[`knowledge/research/llm-wiki-critique.md`](./knowledge/research/llm-wiki-critique.md).
+**Chain-of-custody rule.** If citing a specific number, date, name, or decision — go to the primary source and quote from there. Summaries in `knowledge/research/` are pointers, not authoritative sources.
+Rationale: [`knowledge/research/llm-wiki-critique.md`](./knowledge/research/llm-wiki-critique.md).
 
-**Supersession, не overwrite.** Устаревшую заметку не перезаписывать
-молча. Пометить её `> **Status:** superseded by <link>` и оставить для
-аудита.
+**Supersession, not overwrite.** Never silently overwrite an outdated note. Mark it `> **Status:** superseded by <link>` and keep for audit.
 
-## Testing Guidelines
+## Testing
 
-- Пока что кода нет, поэтому CI не настроен. Проверять:
-  - Markdown-ссылки ведут куда надо.
-  - Документы читаются в GitHub-рендере (нет съехавших таблиц и т.п.).
-- Когда появится `src/` — `make lint / typecheck / test`
-  (см. [`docs/workflow.md`](./docs/workflow.md), фаза S).
+- No CI yet (docs-only). Verify:
+  - Markdown links resolve correctly.
+  - Tables/docs render properly on GitHub.
+- When `src/` exists: `make lint / typecheck / test` (see [`docs/workflow.md`](./docs/workflow.md)).
 
-## Code Style (будущий)
+## Code Style (future)
 
-- Python 3.11+, полные type-хинты.
+- Python 3.11+, full type hints.
 - `ruff check` + `ruff format`.
-- `mypy --strict` (или `pyright`) на модули.
-- `pytest`; LLM-клиент и сеть в тестах — мокаются.
-- Промпты — отдельными файлами в `src/<module>/prompts/`, не в Python-строках.
+- `mypy --strict` on modules.
+- `pytest`; LLM client and network mocked in tests.
+- Prompts as files in `src/<module>/prompts/`, not Python strings.
