@@ -39,8 +39,9 @@ claims_requiring_verification:
   - "HippoRAG ‘single-step multi-hop’ — на бенчмарке MuSiQue/2WikiMultiHop;
      генерализуется не на любой домен."
   - "nano-graphrag ‘~800 LoC’ — на момент v0.0.x; репо растёт."
-  - "agent-creativity gist на 2026-04-25 — это long-form блог об
-     agentic-local-brain (уже в batch-1), не отдельный проект."
+  - "agent-creativity gist — long-form блог об agentic-local-brain
+     (уже в batch-1), не отдельный проект; в синтезе используется как
+     supplement, не как primary source."
   - "Звёзды/контрибьюторы всех репо дрейфуют во времени; на момент фетча см. §3, §4."
 scope: |
   Часть 2B исследования сообщества вокруг LLM-Wiki-паттерна и его сравнение
@@ -279,7 +280,7 @@ clustering as graph-topology operation* (но только когда у нас 
 граф достаточного размера). Отказываемся от: трёхпроходного pipeline
 до того, как у нас будет хотя бы 100 страниц.
 
-### 3.7. agent-creativity gist (5⭐, last edit 2026-04-25)
+### 3.7. agent-creativity gist (5⭐)
 
 **Источник:** [build-agentic-local-brain.md](https://gist.github.com/agent-creativity/a4e090f888a516b313ddd1302e51c286).
 Это long-form блог-нарратив автора `agentic-local-brain` (уже разобран
