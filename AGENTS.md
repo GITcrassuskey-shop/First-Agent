@@ -35,6 +35,30 @@
 - При значимом архитектурном решении — создаём ADR из шаблона
   [`knowledge/adr/0000-template.md`](./knowledge/adr/0000-template.md).
 
+### PR-review checklist (prevent auto-review noise)
+
+Перед тем как открыть PR, проверь эти пункты — каждый из них ранее
+вызывал цикл «бот комментирует → агент чинит → бот подтверждает»,
+тратя токены впустую.
+
+1. **Fenced code blocks — всегда с языком.** Каждый открывающий ` ``` `
+   должен иметь language tag: `` ```python ``, `` ```yaml ``,
+   `` ```text `` (для ASCII-диаграмм, деревьев каталогов, промптов).
+   Закрывающие ` ``` ` остаются без тега. *Нет «просто блока кода».*
+2. **Frontmatter: `compiled:`, не `date:`.** В `knowledge/research/`
+   используем `compiled: "YYYY-MM-DD"` (см.
+   [`knowledge/README.md`](./knowledge/README.md#provenance-frontmatter-для-research-и-любых-summary-заметок)).
+   Поле `date:` бот не распознаёт и будет просить переименовать.
+3. **Длина файла — два лимита.**
+   - Обычные заметки / summaries: **~500 строк**.
+   - Deep-dive / detailed research: **~1 200 строк**.
+   - Подробности — в [`knowledge/README.md` §Conventions](./knowledge/README.md#conventions).
+4. **Chain-of-custody дат.** Если `compiled:` = `2026-04-23`, а в тексте
+   цитируешь факт с датой после 23-го — бот поймает temporal
+   inconsistency. Либо обнови `compiled`, либо убери непроверяемую дату.
+5. **Supersession, не overwrite.** Старый файл не удаляем — помечаем
+   `> **Status:** superseded by <link>` и оставляем для аудита.
+
 ## Development Workflow
 
 - Ветки: `devin/<timestamp>-<slug>` от `main`.

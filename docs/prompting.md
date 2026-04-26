@@ -19,7 +19,7 @@
 
 ## Анатомия хорошего промпта
 
-```
+```text
 [Objective]      1–2 предложения. Какой результат?
 [Context]        Ссылки на файлы / доки / прошлые PR / ADR.
 [Approach]       Как вы хотите, чтобы это было сделано (опционально, но крайне желательно).
@@ -32,7 +32,7 @@
 
 ### T1 — Research & summarise into a note
 
-```
+```text
 [Objective]
 Исследовать <topic>. Результат — структурированная заметка
 в knowledge/research/<slug>.md.
@@ -61,7 +61,7 @@
 
 ### T2 — Scaffold a new module
 
-```
+```text
 [Objective]
 Создать src/<module>/ — чистый типизированный скелет под <purpose>.
 
@@ -90,7 +90,7 @@
 
 ### T3 — Compare two approaches (анти-«analysis paralysis»)
 
-```
+```text
 [Objective]
 Нарисовать два варианта реализации <feature> в параллельных PR, чтобы сравнить.
 
@@ -110,7 +110,7 @@
 
 ### T4 — Co-develop a PRD
 
-```
+```text
 [Objective]
 Совместно написать PRD по <feature>. Кода нет.
 
@@ -130,7 +130,7 @@
 
 ### T5 — Bug reproduction first, then fix
 
-```
+```text
 [Objective]
 Воспроизвести <bug> падающим тестом, ПОТОМ починить.
 

@@ -18,7 +18,7 @@
 
 ### 1. Instruction Layer — что агент знает и как себя ведёт
 
-```
+```text
 ┌─────────────────────────────────────┐
 │         Instruction Layer            │
 │                                      │
@@ -41,7 +41,7 @@
 
 ### 2. Execution Layer — чем агент физически пользуется
 
-```
+```text
 ┌─────────────────────────────────────┐
 │          Execution Layer             │
 │                                      │
@@ -60,7 +60,7 @@
 
 ### 3. Integration Layer — что за пределами песочницы
 
-```
+```text
 ┌─────────────────────────────────────┐
 │         Integration Layer            │
 │                                      │
@@ -84,7 +84,7 @@
 
 Агент работает хорошо, когда видит результат своих действий:
 
-```
+```text
 Action → Observation → Reflection → Next Action
   │                                      │
   └──────────── Feedback Loop ───────────┘
@@ -108,7 +108,7 @@ Action → Observation → Reflection → Next Action
 
 Агент должен уметь различать три режима:
 
-```
+```python
 if task_is_clear:
     execute()
 elif task_is_ambiguous:
@@ -121,7 +121,7 @@ elif task_exceeds_capability:
 
 ### П4 — Накопление знаний
 
-```
+```text
 Сессия 1: выяснили, что тестам нужен Docker
   → Knowledge: «Перед тестами поднимай docker-compose»
 

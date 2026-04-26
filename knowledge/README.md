@@ -8,7 +8,7 @@ Durable project knowledge for First-Agent. Everything here is:
 
 ## Layout
 
-```
+```text
 knowledge/
 ├── README.md                 # this file
 ├── project-overview.md       # one-page product + scope snapshot
@@ -24,12 +24,17 @@ knowledge/
 ## Conventions
 
 - One concept per file.
-- Markdown only. Keep under **~500 lines**; split if much longer. Раньше
-  здесь стояло ~250 — повышено сознательно: исследовательские заметки часто
-  ложатся в 300–450 строк без потери связности, а более жёсткий лимит
-  заставлял дробить файлы там, где это вредит читаемости. Если файл
-  стабильно лезет за 500 — это сигнал, что внутри живут две разные темы;
-  тогда расщепляем по теме, а не по объёму.
+- Markdown only. **Two line-length tiers:**
+  - **Simple summaries / overviews** — keep under **~500 lines**. Если
+    файл стабильно лезет за 500 — это сигнал, что внутри живут две
+    разные темы; тогда расщепляем по теме, а не по объёму.
+  - **Deep-dive / detailed research** — keep under **~1 200 lines**.
+    Глубокие исследования (multi-source critique, per-project verdicts,
+    cross-cutting analysis) часто требуют 600–1 000 строк без потери
+    связности. Дробление deep-dive ради соблюдения ~500 вредит
+    читаемости больше, чем лишний размер. Если deep-dive лезет за
+    1 200 — это уже сигнал, что внутри две разные темы.
+  - Раньше здесь стояло ~250 (повышено до ~500 в PR #9).
 - Link to source URLs for any non-obvious claim.
 - **Never silently overwrite.** When a file is superseded: mark the old
   file with `> **Status:** superseded by <link>` at the top, add a
