@@ -19,6 +19,18 @@ chain_of_custody:
   - "Все цифры о звёздах/коммитах — на дату фетча; могут устареть."
   - "Спорные числа (см. §6) проверял отдельно: README-первоисточник."
 status: research
+claims_requiring_verification:
+  - "cavemem ~75% token reduction — claim автора, не измеренный бенчмарк;
+     коэффициент зависит от домена входов."
+  - "CodeDNA +17pp F1 SWE-bench — n=10 patches, DeepSeek 10/0/0;
+     signal, не proof."
+  - "CodeDNA p=0.040 на n=5 — статистически слабый, рядом с шумом."
+  - "obsidian-llm-wiki '79K-line cli.py' в досье 1 — вероятно
+     ~7.9K строк или 79KB; фактический размер не проверял."
+  - "agentic-local-brain '98.2% protocol adoption' — это метрика
+     CodeDNA, в досье склеилась с другим проектом."
+  - "Звёзды/контрибьюторы всех шести репо — на дату фетча
+     2026-04-23/24; дрифтят во времени."
 scope: |
   Часть 2A исследования сообщества вокруг LLM Wiki-паттерна. Шесть проектов:
   cavemem, codedna, obsidian-llm-wiki-local, llm-atomic-wiki, AI-Context-OS,
@@ -370,7 +382,8 @@ PR после твоего одобрения, как мы делали в Part 
 
 Эти вопросы перекрывают часть открытых из `agent-roles.md §8` (где
 хранить роли, язык промптов), и часть из `llm-wiki-critique-first-agent.md
-§10` (volatile/stable граница). Их можно ответить вместе, после Part 2B.
+§6 (T2)` (стратификация stable vs volatile). Их можно ответить вместе,
+после Part 2B.
 
 ## 9. Sources
 
