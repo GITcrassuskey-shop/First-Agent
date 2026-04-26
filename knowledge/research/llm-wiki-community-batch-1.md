@@ -36,7 +36,7 @@ scope: |
   cavemem, codedna, obsidian-llm-wiki-local, llm-atomic-wiki, AI-Context-OS,
   agentic-local-brain. Цель — отделить «то, что работает на проде» от
   «модно, но недоказано» в применении к нашему агенту (First-Agent).
-  Часть 2B (gbrain, llm-wiki-kit, obsidian-wiki, sparks, mnemovault, sparks
+  Часть 2B (gbrain, llm-wiki-kit, obsidian-wiki, sparks, mnemovault
   + safishamsi/graphify + сравнение с GraphRAG) — отдельным PR после
   одобрения этого.
 related:
