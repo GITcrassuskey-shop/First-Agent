@@ -24,7 +24,7 @@ supersedes: none
 extends:
   - knowledge/research/llm-wiki-community-batch-1.md  # §3.6 codedna
   - knowledge/research/llm-wiki-community-batch-2.md  # §3.1 gbrain, §3.4 sparks
-  - knowledge/research/ai-context-os-memm-deep-dive.md
+  - knowledge/research/ai-context-os-memm-deep-dive.md  # forthcoming via PR #12 (в полёте при создании этой ноты)
 related:
   - knowledge/research/llm-wiki-critique.md
   - knowledge/research/llm-wiki-critique-first-agent.md
@@ -245,8 +245,9 @@ Format: `model-id | provider | YYYY-MM-DD | session_id | what you did`.
 > требованию», что у MEMM реализована через `<!-- L1 -->`/`<!-- L2 -->`,
 > но в codedna она *file-to-file*, не *внутри-файла*. Для нас
 > в `knowledge/research/` ссылка на отдельный deep-dive (как мы
-> уже делаем: `ai-context-os-memm-deep-dive.md`) — это *тот же
-> паттерн*, и он валидируется codedna v0.9 как осознанный приём.
+> уже делаем для AI-Context-OS — [PR #12](https://github.com/GITcrassuskey-shop/First-Agent/pull/12),
+> `ai-context-os-memm-deep-dive.md`) — это *тот же паттерн*,
+> и он валидируется codedna v0.9 как осознанный приём.
 
 ### 3.4 Git trailers как authoritative audit log
 
@@ -581,8 +582,10 @@ idle. Health-check перед использованием.
 - `knowledge/research/llm-wiki-community-batch-1.md` §3.6 (codedna).
 - `knowledge/research/llm-wiki-community-batch-2.md` §3.1 (gbrain),
   §3.4 (sparks).
-- `knowledge/research/ai-context-os-memm-deep-dive.md` (для
-  сравнения с Mem0 architecture).
+- `knowledge/research/ai-context-os-memm-deep-dive.md` — для
+  сравнения с Mem0 architecture. **В полёте в
+  [PR #12](https://github.com/GITcrassuskey-shop/First-Agent/pull/12);**
+  будет доступен по этому пути после мержа.
 
 **Related research-grade context:**
 - [llmstxt.org](https://llmstxt.org/) — `llms.txt` спецификация.
