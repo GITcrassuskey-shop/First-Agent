@@ -61,3 +61,4 @@
 - [knowledge/research/agent-roles.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/agent-roles.md): Agent role taxonomy.
 - [knowledge/research/agent-video-research.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/agent-video-research.md): Video-source research notes (predates current ADR series).
 - [knowledge/research/architect-fa-refactor-ru.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/architect-fa-refactor-ru.md): Architect prompt refactor notes (Russian).
+- [knowledge/research/chunker-design.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/chunker-design.md): Chunker design — universal-ctags vs tree-sitter vs per-language regex; recommendation for ADR-5.
