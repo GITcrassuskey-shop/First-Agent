@@ -18,11 +18,12 @@ Details: [`README.md`](./README.md).
 
 ## Working in This Repo
 
-- All documentation is Markdown. ATX headings (`#`, `##`), lines ≤ 120 chars.
-- Fenced code blocks — always with a language tag:
-  - Code: `python`, `yaml`, `json`, `bash`.
-  - Non-code (ASCII art, directory trees, prompts, logs): `text`.
-  - Never leave a bare ` ``` `.
+- All documentation is Markdown. ATX headings (`#`, `##`), short lines ~150 chars.
+- Fenced code blocks 
+  - ALWAYS open with a language tag:
+    - Code: `python`, `yaml`, `json`, `bash`.
+    - Non-code (ASCII art, directory trees, prompts, logs): `text`.
+  -Close with bare ` ``` `.
 - New docs go in the right folder:
   - Guides / references → `docs/`. Update [`docs/README.md`](./docs/README.md).
   - Project artifacts (decisions, research, prompts) → `knowledge/`.
@@ -32,11 +33,11 @@ Details: [`README.md`](./README.md).
 
 Verify before opening a PR. Each item has triggered wasted review cycles.
 
-1. **Code fences have language tags.** No bare ` ``` `. See rule above.
+1. **Code fences have language tags.** No bare ` ``` ` at opening! See rule above.
 2. **Frontmatter uses `compiled:`, not `date:`.** Schema: [`knowledge/README.md`](./knowledge/README.md#conventions).
 3. **File length within tier limits.**
-   - Summaries / overviews: **~500 lines**.
-   - Deep-dive research: **~1 200 lines**.
+   - Summaries / overviews: **~600 lines**.
+   - Deep-dive research: **~1 300 lines**.
 4. **`compiled:` date ≥ all dates cited in text.** No temporal impossibilities.
 5. **Supersession, not overwrite.** Mark old file `> **Status:** superseded by <link>`. Keep for audit.
 
@@ -68,18 +69,3 @@ Rationale: [`knowledge/research/llm-wiki-critique.md`](./knowledge/research/llm-
 
 **Supersession, not overwrite.** Never silently overwrite an outdated
 note. Mark it `> **Status:** superseded by <link>` and keep for audit.
-
-## Testing
-
-- No CI yet (docs-only). Verify:
-  - Markdown links resolve correctly.
-  - Tables/docs render properly on GitHub.
-- When `src/` exists: `make lint / typecheck / test` (see [`docs/workflow.md`](./docs/workflow.md)).
-
-## Code Style (future)
-
-- Python 3.11+, full type hints.
-- `ruff check` + `ruff format`.
-- `mypy --strict` on modules.
-- `pytest`; LLM client and network mocked in tests.
-- Prompts as files in `src/<module>/prompts/`, not Python strings.
