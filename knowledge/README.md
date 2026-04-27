@@ -73,14 +73,12 @@ typed index over the corpus (post-v0.1, see
 [`adr/ADR-3-memory-architecture-variant.md`](./adr/ADR-3-memory-architecture-variant.md)
 Volatile-store hooks).
 
+All v1 fields above stay required. The v2 block adds only the
+optional fields:
+
 ```yaml
 ---
-# v1 fields (required as before)
-title: "<title>"
-source:
-  - "<url or repo path>"
-compiled: "<YYYY-MM-DD>"
-chain_of_custody: "<where to find the primary source for specific facts>"
+# ... all v1 fields above (title, source, compiled, chain_of_custody) ...
 
 # v2 optional fields
 tier: stable          # stable | volatile
