@@ -18,7 +18,7 @@ User feedback in PR-#17 review (verbatim):
 > Hybrid Brain — апгрейд позже
 > Layered KG — overkill для этого проекта.
 
-[ADR-0001](./0001-v01-use-case-scope.md) restricts v0.1 to UC1
+[ADR-#1](./#1-v01-use-case-scope.md) restricts v0.1 to UC1
 (coding + PR end-to-end) and UC3 (local docs → wiki), with UC2
 best-effort and UC4 deferred. UC4 is precisely the use case where
 Variant B's per-user volatile store earns its complexity, so deferring
