@@ -24,4 +24,7 @@ You do **not** need an ADR for routine code-level choices.
 
 | # | Title | Status |
 |---|---|---|
-| — | *(add ADRs here as they land)* | — |
+| [0001](./0001-v01-use-case-scope.md) | v0.1 use-case scope | proposed |
+| [0002](./0002-llm-tiering.md) | LLM tiering & access | proposed |
+| [0003](./0003-memory-architecture-variant.md) | Memory architecture variant for v0.1 | proposed |
+| [0004](./0004-storage-backend.md) | Storage backend for v0.1 | proposed |
