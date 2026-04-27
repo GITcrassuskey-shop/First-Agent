@@ -95,7 +95,9 @@ index, with the following concrete shape:
   - `chunks(id INTEGER PK, path TEXT, anchor TEXT, lang TEXT,
     body TEXT, mtime REAL, sha256 TEXT)`.
   - `chunks_fts(body, content='chunks', content_rowid='id')` —
-    contentless FTS5 for BM25.
+    external-content FTS5 for BM25 (the FTS table reads body from
+    `chunks` rather than storing its own copy; supports row-level
+    UPDATE / DELETE for incremental upserts).
   - `meta(key TEXT PK, value TEXT)` — schema version, last reindex
     timestamp, FA version.
 - **Tokeniser**: `unicode61 remove_diacritics 2` + porter stemmer
