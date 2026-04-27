@@ -121,7 +121,7 @@ v0.1 milestone. v0.2 ADR will revisit each independently.
   module — user's UC1 acceptance scenario depends on it. Variant A
   forces us to nail it instead of distracting with vector / graph
   work.
-- **Positive:** Mixed-LLM tiering (ADR-0002) works cleanly because
+- **Positive:** Mixed-LLM tiering (ADR-#2) works cleanly because
   Variant A doesn't require Architect-tier LLM at write time.
 - **Negative:** UC1 cross-session memory ("what did I think about
   this function 2 weeks ago") relies on session archive grep, not
