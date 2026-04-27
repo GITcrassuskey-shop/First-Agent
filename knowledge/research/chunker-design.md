@@ -324,7 +324,8 @@ Maintained fork от Exuberant Ctags. C-binary, single-CLI,
 не совпало → re-extract.
 
 **Фактчек.** PowerShell-поддержка проверяется на одном эталонном
-файле пользователя ДО коммита implementation. См. §9 OQ-2.
+файле пользователя ДО коммита implementation. См. §8, item 1 +
+§9 OQ-2.
 
 ### 4.2 tree-sitter
 
@@ -689,7 +690,7 @@ ADR-5 будет «chunker tool selection». Вопросы, которые на
 | # | Вопрос | Default-ответ из этой ноты |
 |---|---|---|
 | OQ-1 | universal-ctags vs tree-sitter для code | **ctags для v0.1** (см. §7.1, §7.2). Triggers for revisit зафиксировать в ADR-5 §Consequences. |
-| OQ-2 | Ожидание ctags-PowerShell на нашем 1500-строчном `.ps1`: production-ready или дырявое? | TBD. **Sample-проверка ОБЯЗАТЕЛЬНА** до коммита (см. §8.1). |
+| OQ-2 | Ожидание ctags-PowerShell на нашем 1500-строчном `.ps1`: production-ready или дырявое? | TBD. **Sample-проверка ОБЯЗАТЕЛЬНА** до коммита (см. §8, item 1). |
 | OQ-3 | tree-sitter-language-pack on-disk size — какой реальный footprint после `pip install`? | TBD. Замерять во время setup-fasta. <100 MB — ok; >300 MB — пересмотр. |
 | OQ-4 | Should chunker handle `#region` / `#endregion` в PowerShell специально? | **Да** (§7.1, шаг 2 special-case). Это user-editable boundary; уважать. |
 | OQ-5 | markdown-it-py vs mistune — выбор зависит от чего? | **markdown-it-py** (§4.3). Аргумент — ecosystem maturity. Не блокирующий. |
