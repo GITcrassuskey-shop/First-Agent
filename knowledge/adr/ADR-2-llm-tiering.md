@@ -1,6 +1,6 @@
 # ADR-2 — LLM tiering & access
 
-- **Status:** proposed
+- **Status:** accepted
 - **Date:** 2026-04-27
 - **Deciders:** project owner (`0oi9z7m1z8`), Devin (drafting)
 

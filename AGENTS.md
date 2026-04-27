@@ -47,6 +47,22 @@ Verify before opening a PR. Each item has triggered wasted review cycles.
 - All changes via Pull Request.
 - Commit messages: descriptive, English, present tense (`docs: add architecture note`).
 - Never push directly to `main`.
+- **`AI-Session:` git trailer.** When a commit is driven by a Devin
+  (or other LLM-agent) session, add an `AI-Session: <session-id>`
+  trailer to the commit message. This preserves the link from a
+  squash-merged commit back to the originating session for audit and
+  re-entry. Pattern lifted from `codedna` (see
+  [`research/agentic-memory-supplement.md` §3](./knowledge/research/agentic-memory-supplement.md)).
+  Example:
+
+  ```text
+  docs: add ADR-N on <topic>
+
+  Body...
+
+  AI-Session: 2f45f66ef9ff45eab03161ecef165c0e
+  Co-Authored-By: <human> <email>
+  ```
 
 ## Query Routing
 

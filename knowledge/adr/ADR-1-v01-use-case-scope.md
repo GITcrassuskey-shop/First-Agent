@@ -1,6 +1,6 @@
 # ADR-1 — v0.1 use-case scope
 
-- **Status:** proposed
+- **Status:** accepted
 - **Date:** 2026-04-27
 - **Deciders:** project owner (`0oi9z7m1z8`), Devin (drafting)
 

@@ -24,7 +24,7 @@ You do **not** need an ADR for routine code-level choices.
 
 | # | Title | Status |
 |---|---|---|
-| [1](./ADR-1-v01-use-case-scope.md) | v0.1 use-case scope | proposed |
-| [2](./ADR-2-llm-tiering.md) | LLM tiering & access | proposed |
-| [3](./ADR-3-memory-architecture-variant.md) | Memory architecture variant for v0.1 | proposed |
-| [4](./ADR-4-storage-backend.md) | Storage backend for v0.1 | proposed |
+| [1](./ADR-1-v01-use-case-scope.md) | v0.1 use-case scope | accepted |
+| [2](./ADR-2-llm-tiering.md) | LLM tiering & access | accepted |
+| [3](./ADR-3-memory-architecture-variant.md) | Memory architecture variant for v0.1 | accepted |
+| [4](./ADR-4-storage-backend.md) | Storage backend for v0.1 | accepted |

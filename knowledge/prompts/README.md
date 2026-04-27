@@ -45,6 +45,7 @@ last-reviewed: YYYY-MM-DD
 
 | File | Purpose |
 |---|---|
+| [`RESOLVER.md`](./RESOLVER.md) | Intent-to-template dispatcher (T1-T5 plus role prompts). |
 | [`research-topic.md`](./research-topic.md) | Research `<topic>` and produce a structured note. |
 | [`architect-fa.md`](./architect-fa.md) | Architect/Planner system prompt (full). |
 | [`architect-fa-compact.md`](./architect-fa-compact.md) | Architect/Planner system prompt (compact). |

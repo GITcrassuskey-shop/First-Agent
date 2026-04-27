@@ -1,6 +1,6 @@
 # ADR-4 — Storage backend for v0.1
 
-- **Status:** proposed
+- **Status:** accepted
 - **Date:** 2026-04-27
 - **Deciders:** project owner (`0oi9z7m1z8`), Devin (drafting)
 

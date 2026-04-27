@@ -11,12 +11,14 @@ Durable project knowledge for First-Agent. Everything here is:
 ```text
 knowledge/
 ├── README.md                 # this file
+├── llms.txt                  # one-fetch URL index for LLM agents (llmstxt.org)
 ├── project-overview.md       # one-page product + scope snapshot
 ├── adr/                      # architecture decision records
 │   ├── README.md
 │   └── ADR-template.md
 ├── prompts/                  # reusable prompts
 │   ├── README.md
+│   ├── RESOLVER.md           # intent-to-template dispatcher
 │   └── research-topic.md
 └── research/                 # (created on demand) research notes
 ```
@@ -61,6 +63,55 @@ the note contains numbers, dates, quotes, or decisions that someone might
 reference. The goal is not to lose the connection between the LLM-written summary and
 the primary source. For more details, see
 [`research/llm-wiki-critique-first-agent.md §9`](./research/llm-wiki-critique-first-agent.md#9-specific-edits-to-existing-files).
+
+### Frontmatter v2 — optional fields (additive)
+
+The schema above (v1) stays mandatory for new notes. The fields below
+are **optional** and **additive** — existing files do not need to be
+backfilled. They become useful once the agent starts maintaining a
+typed index over the corpus (post-v0.1, see
+[`adr/ADR-3-memory-architecture-variant.md`](./adr/ADR-3-memory-architecture-variant.md)
+Volatile-store hooks).
+
+```yaml
+---
+# v1 fields (required as before)
+title: "<title>"
+source:
+  - "<url or repo path>"
+compiled: "<YYYY-MM-DD>"
+chain_of_custody: "<where to find the primary source for specific facts>"
+
+# v2 optional fields
+tier: stable          # stable | volatile
+links:                # internal cross-refs (relative paths from this file)
+  - "./other-note.md"
+mentions:             # external entities (people, projects, papers, repos, URLs)
+  - "OpenRouter"
+  - "https://arxiv.org/abs/2504.19413"
+confidence: extracted # extracted | inferred | ambiguous
+---
+```
+
+Field semantics:
+
+- **`tier`** — which memory tier the note belongs to. `stable` is the
+  filesystem canon (PR-write); `volatile` is the v0.2 Mem0-style
+  store (does not exist in v0.1). If absent, assume `stable`.
+- **`links`** — explicit graph edges to other notes in this repo, as
+  relative paths. Lets the future indexer build a citation graph
+  without re-parsing prose.
+- **`mentions`** — external entities referenced in the note. Free-form
+  strings (names, URLs, repo handles). Used by the future indexer for
+  external-entity recall.
+- **`confidence`** — origin of the note's claims. `extracted` if
+  copied verbatim from a primary source; `inferred` if synthesised by
+  the author / LLM from multiple sources; `ambiguous` if the source-to-
+  claim mapping is unclear and the note needs a verification pass.
+
+None of these fields are validated by tooling yet. They exist so that
+when v0.2 indexer lands, the additive backfill is mechanical, not a
+schema migration.
 
 ## What goes where
 
