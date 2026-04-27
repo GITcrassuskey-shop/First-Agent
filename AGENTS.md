@@ -18,6 +18,11 @@ Details: [`README.md`](./README.md).
 
 ## Working in This Repo
 
+- **Session bootstrap.** At the start of any new agent session, fetch
+  [`knowledge/llms.txt`](./knowledge/llms.txt) first. It is the
+  project map for LLM agents ([llmstxt.org](https://llmstxt.org/)
+  convention) — every documentation file is reachable from there in
+  one hop. Do not crawl the repo manually before reading this file.
 - All documentation is Markdown. ATX headings (`#`, `##`), short lines ~150 chars.
 - Fenced code blocks 
   - ALWAYS open with a language tag:
@@ -40,6 +45,18 @@ Verify before opening a PR. Each item has triggered wasted review cycles.
    - Deep-dive research: **~1 300 lines**.
 4. **`compiled:` date ≥ all dates cited in text.** No temporal impossibilities.
 5. **Supersession, not overwrite.** Mark old file `> **Status:** superseded by <link>`. Keep for audit.
+6. **PR description lists changed/new files as clickable blob-URLs**
+   (`https://github.com/<owner>/<repo>/blob/<branch>/<path>`), at
+   least for non-trivial files. Plain bullet text is insufficient —
+   reviewers should be able to open each file in one click without
+   copy-pasting paths. Use the head branch of the PR, not `main`.
+7. **`knowledge/llms.txt` reflects reality.** If this PR adds,
+   removes, or renames any file under `docs/` or `knowledge/`, update
+   the corresponding entry (or add / remove a row) in
+   [`knowledge/llms.txt`](./knowledge/llms.txt). The index is
+   hand-maintained; it drifts silently if not enforced on every PR.
+   A pre-commit hook or generator can be added later (see
+   [`docs/workflow.md`](./docs/workflow.md) Phase S).
 
 ## Development Workflow
 
