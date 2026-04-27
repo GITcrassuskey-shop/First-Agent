@@ -71,9 +71,9 @@ concrete mapping for v0.1:
 Configuration lives in a single YAML/TOML file (e.g.
 `~/.fa/models.yaml`) with one block per role:
 
-```text
+```yaml
 planner:
-  primary:   { provider: openrouter, model: "z-ai/glm-4.5" }
+  primary:   { provider: openrouter, model: "z-ai/glm-5.1" }
   fallback:  { provider: vllm-local, model: "GLM-5.1-Air" }
 coder:
   primary:   { provider: vllm-local, model: "Nemotron-3-Super-49B" }
@@ -82,8 +82,17 @@ debug:
   primary:  { provider: anthropic, model: "claude-opus-4-7-20260301" }
   fallback: { provider: anthropic, model: "claude-sonnet-4-7-20260301" }
 judge:
-  primary: { provider: openrouter, model: "z-ai/glm-4.5", pinned: true }
+  primary: { provider: openrouter, model: "z-ai/glm-5.1", pinned: true }
 ```
+
+> **Note on model slugs.** The strings above (`z-ai/glm-5.1`,
+> `claude-opus-4-7-20260301`, etc.) are illustrative of the
+> *shape* of the config, not authoritative slugs at any given
+> date. Provider catalogs change; pick the actual current slug
+> from OpenRouter / Anthropic / vLLM at config time. The
+> *decision* is the table above (which tier each role lives in
+> and how `primary → fallback` chains); the *implementation*
+> resolves slugs to whatever is current.
 
 - "primary → fallback" chain per role; **no cross-tier escalation**
   on failure.
