@@ -63,10 +63,10 @@ concrete mapping for v0.1:
 
 | Role | Tier | Default model | Provider |
 |---|---|---|---|
-| **Planner** | top-tier OSS | GLM 5.1 (or Kimi 2.6 / Mimo 2.5 — config-pickable) | OpenRouter or local vLLM |
-| **Coder** | mid-tier OSS | Nemotron 3 Super (or Qwen 3.6 27B) | local vLLM (preferred) or OpenRouter |
-| **Debug / elite** | elite | Claude latest available (Opus 4.7-tier when accessible, Sonnet otherwise) | Anthropic API directly |
-| **Eval (LLM-as-judge)** | top-tier OSS | same as Planner; isolated config slot so judge can be version-pinned | OpenRouter or local |
+| **Planner** | top-tier OSS | GLM 5.1 (or Kimi 2.6 / Mimo 2.5 — config-pickable) | AnyProvider API key / OpenRouter |
+| **Coder** | mid-tier OSS | Nemotron 3 Super (or Qwen 3.6 27B) | AnyProvider API key / OpenRouter |
+| **Debug / elite** | top tier | DIFFERENT top-tier OSS / top tier from AnyProvider API key |
+| **Eval (LLM-as-judge)** | top-tier OSS | DIFFERENT model ; isolated config slot so judge can be version-pinned | AnyProvider API key / OpenRouter |
 
 Configuration lives in a single YAML/TOML file (e.g.
 `~/.fa/models.yaml`) with one block per role:
@@ -74,15 +74,15 @@ Configuration lives in a single YAML/TOML file (e.g.
 ```yaml
 planner:
   primary:   { provider: openrouter, model: "z-ai/glm-5.1" }
-  fallback:  { provider: vllm-local, model: "GLM-5.1-Air" }
+  fallback:  { provider: AnyProvider, model: "GLM-5.1-Air" }
 coder:
-  primary:   { provider: vllm-local, model: "Nemotron-3-Super-49B" }
+  primary:   { provider: AnyProvider, model: "Nemotron-3-Super-49B" }
   fallback:  { provider: openrouter, model: "qwen/qwen3-coder-27b" }
 debug:
-  primary:  { provider: anthropic, model: "claude-opus-4-7-20260301" }
-  fallback: { provider: anthropic, model: "claude-sonnet-4-7-20260301" }
+  primary:  { provider: any, model: "claude-opus-4-7-20260301" }
+  fallback: { provider: any, model: "claude-sonnet-4-7-20260301" }
 judge:
-  primary: { provider: openrouter, model: "z-ai/glm-5.1", pinned: true }
+  primary: { provider: openrouter, model: "z-ai/kimi 2.6", pinned: true }
 ```
 
 > **Note on model slugs.** The strings above (`z-ai/glm-5.1`,
@@ -121,7 +121,7 @@ judge:
 - **Follow-up work this unlocks:**
   - `src/fa/llm/router.py` — minimal role-based dispatcher reading
     `~/.fa/models.yaml`.
-  - Provider adapters: `anthropic_client.py`, `openrouter_client.py`,
+  - Provider adapters: `provider_client.py`, `openrouter_client.py`,
     `vllm_local_client.py` (one thin wrapper per provider).
   - Secrets policy: `~/.fa/secrets.env` (chmod 600), never committed.
   - Decision deferred to a future ADR: how to express token / cost
