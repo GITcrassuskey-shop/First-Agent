@@ -1,4 +1,4 @@
-# ADR-0004 — Storage backend for v0.1
+# ADR-#4 — Storage backend for v0.1
 
 - **Status:** proposed
 - **Date:** 2026-04-27
