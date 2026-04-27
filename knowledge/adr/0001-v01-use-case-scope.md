@@ -102,8 +102,11 @@ volatile-store work that will support it.
   for the first time; we accept that risk in exchange for shipping
   v0.1.
 - **Negative:** "Best-effort UC2" needs a token-cost guardrail to
-  avoid surprise spend; addressed in
-  [ADR-0002](./0002-llm-tiering.md) §Consequences.
+  avoid surprise spend; partially mitigated by static role routing
+  ([ADR-0002](./0002-llm-tiering.md)) which keeps multi-source
+  fan-out on Planner-tier OSS rather than elite. Fully addressed
+  only when per-role token budgets land — explicitly deferred (see
+  ADR-0002 §Consequences "Follow-up work").
 - **Follow-up work this unlocks:**
   - PR-write allow-list config (`~/.fa/repos.toml`) — single user
     repo + FA itself for v0.1.
