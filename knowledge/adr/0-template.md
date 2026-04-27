@@ -1,6 +1,6 @@
-# ADR-NNNN — <Short Title>
+# ADR-#N — <Short Title>
 
-- **Status:** proposed | accepted | superseded by [ADR-XXXX](./XXXX-*.md) | deprecated
+- **Status:** proposed | accepted | superseded by [ADR-#N+1](./#N+1-*.md) | deprecated
 - **Date:** YYYY-MM-DD
 - **Deciders:** <names / handles>
 
