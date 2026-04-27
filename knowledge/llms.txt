@@ -13,51 +13,51 @@
 
 ## Repo entrypoints
 
-- [README.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/README.md): Project overview, current status, roadmap (Russian).
-- [AGENTS.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/AGENTS.md): Instructions for AI agents working in this repo (English).
+- [README.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/README.md): Project overview, current status, roadmap (Russian).
+- [AGENTS.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/AGENTS.md): Instructions for AI agents working in this repo (English).
 
 ## Docs (`docs/`)
 
-- [docs/README.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/docs/README.md): Wiki index.
-- [docs/architecture.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/docs/architecture.md): Three-layer agent architecture (Interface / Cognitive / Execution).
-- [docs/workflow.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/docs/workflow.md): R-S-M lifecycle and Devin session conventions.
-- [docs/prompting.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/docs/prompting.md): T1-T5 prompt templates and anti-patterns.
-- [docs/devin-reference.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/docs/devin-reference.md): Devin-specific reference (Knowledge notes, Skills, Playbooks).
-- [docs/glossary.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/docs/glossary.md): Project glossary.
-- [docs/agent%20creation%20github.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/docs/agent%20creation%20github.md): Step-by-step agent-creation tutorial.
+- [docs/README.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/README.md): Wiki index.
+- [docs/architecture.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/architecture.md): Three-layer agent architecture (Interface / Cognitive / Execution).
+- [docs/workflow.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/workflow.md): R-S-M lifecycle and Devin session conventions.
+- [docs/prompting.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/prompting.md): T1-T5 prompt templates and anti-patterns.
+- [docs/devin-reference.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/devin-reference.md): Devin-specific reference (Knowledge notes, Skills, Playbooks).
+- [docs/glossary.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/glossary.md): Project glossary.
+- [docs/agent%20creation%20github.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/agent%20creation%20github.md): Step-by-step agent-creation tutorial.
 
 ## Project knowledge (`knowledge/`)
 
-- [knowledge/README.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/README.md): Knowledge folder conventions, frontmatter schema, query routing.
-- [knowledge/project-overview.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/project-overview.md): One-page product/scope snapshot for v0.1.
+- [knowledge/README.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/README.md): Knowledge folder conventions, frontmatter schema, query routing.
+- [knowledge/project-overview.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/project-overview.md): One-page product/scope snapshot for v0.1.
 
 ## ADRs (`knowledge/adr/`)
 
-- [knowledge/adr/README.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/adr/README.md): ADR process and index.
-- [knowledge/adr/ADR-template.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/adr/ADR-template.md): ADR template (copy when adding a new decision).
-- [knowledge/adr/ADR-1-v01-use-case-scope.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/adr/ADR-1-v01-use-case-scope.md): v0.1 use-case scope (UC1 + UC3 in; UC4 deferred; UC2 best-effort).
-- [knowledge/adr/ADR-2-llm-tiering.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/adr/ADR-2-llm-tiering.md): LLM tiering and access (static role routing; Planner / Coder / Debug / Eval).
-- [knowledge/adr/ADR-3-memory-architecture-variant.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/adr/ADR-3-memory-architecture-variant.md): Memory architecture variant for v0.1 (Variant A "Mechanical Wiki").
-- [knowledge/adr/ADR-4-storage-backend.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/adr/ADR-4-storage-backend.md): Storage backend for v0.1 (SQLite FTS5).
+- [knowledge/adr/README.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/README.md): ADR process and index.
+- [knowledge/adr/ADR-template.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/ADR-template.md): ADR template (copy when adding a new decision).
+- [knowledge/adr/ADR-1-v01-use-case-scope.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/ADR-1-v01-use-case-scope.md): v0.1 use-case scope (UC1 + UC3 in; UC4 deferred; UC2 best-effort).
+- [knowledge/adr/ADR-2-llm-tiering.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/ADR-2-llm-tiering.md): LLM tiering and access (static role routing; Planner / Coder / Debug / Eval).
+- [knowledge/adr/ADR-3-memory-architecture-variant.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/ADR-3-memory-architecture-variant.md): Memory architecture variant for v0.1 (Variant A "Mechanical Wiki").
+- [knowledge/adr/ADR-4-storage-backend.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/ADR-4-storage-backend.md): Storage backend for v0.1 (SQLite FTS5).
 
 ## Prompts (`knowledge/prompts/`)
 
-- [knowledge/prompts/README.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/prompts/README.md): Prompts library conventions and index.
-- [knowledge/prompts/RESOLVER.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/prompts/RESOLVER.md): Intent-to-template dispatcher (T1-T5 plus role prompts).
-- [knowledge/prompts/research-topic.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/prompts/research-topic.md): T1 research-topic task prompt.
-- [knowledge/prompts/architect-fa.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/prompts/architect-fa.md): Architect / Planner system prompt (full).
-- [knowledge/prompts/architect-fa-compact.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/prompts/architect-fa-compact.md): Architect / Planner system prompt (compact).
+- [knowledge/prompts/README.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/prompts/README.md): Prompts library conventions and index.
+- [knowledge/prompts/RESOLVER.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/prompts/RESOLVER.md): Intent-to-template dispatcher (T1-T5 plus role prompts).
+- [knowledge/prompts/research-topic.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/prompts/research-topic.md): T1 research-topic task prompt.
+- [knowledge/prompts/architect-fa.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/prompts/architect-fa.md): Architect / Planner system prompt (full).
+- [knowledge/prompts/architect-fa-compact.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/prompts/architect-fa-compact.md): Architect / Planner system prompt (compact).
 
 ## Research (`knowledge/research/`)
 
-- [knowledge/research/memory-architecture-design-2026-04-26.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/memory-architecture-design-2026-04-26.md): Memory architecture roadmap, three variants, open questions. Source for ADR-3.
-- [knowledge/research/agentic-memory-supplement.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/agentic-memory-supplement.md): Mem0 paper plus codedna / gbrain / sparks / gstack deltas.
-- [knowledge/research/ai-context-os-memm-deep-dive.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/ai-context-os-memm-deep-dive.md): AI-Context-OS (MEMM) backend deep dive.
-- [knowledge/research/llm-wiki-community-batch-1.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/llm-wiki-community-batch-1.md): Community LLM-Wiki survey, batch 1.
-- [knowledge/research/llm-wiki-community-batch-2.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/llm-wiki-community-batch-2.md): Community LLM-Wiki survey, batch 2 plus GraphRAG comparison.
-- [knowledge/research/llm-wiki-critique.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/llm-wiki-critique.md): Cross-cutting critique of LLM-Wiki / GraphRAG approaches.
-- [knowledge/research/llm-wiki-critique-first-agent.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/llm-wiki-critique-first-agent.md): Critique applied to First-Agent's existing knowledge layout.
-- [knowledge/research/llm-wiki-critique-sources.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/llm-wiki-critique-sources.md): Source list for the critique.
-- [knowledge/research/agent-roles.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/agent-roles.md): Agent role taxonomy.
-- [knowledge/research/agent-video-research.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/agent-video-research.md): Video-source research notes (predates current ADR series).
-- [knowledge/research/architect-fa-refactor-ru.md](https://raw.githubusercontent.com/gitcrassuskey-shop/first-agent/main/knowledge/research/architect-fa-refactor-ru.md): Architect prompt refactor notes (Russian).
+- [knowledge/research/memory-architecture-design-2026-04-26.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/memory-architecture-design-2026-04-26.md): Memory architecture roadmap, three variants, open questions. Source for ADR-3.
+- [knowledge/research/agentic-memory-supplement.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/agentic-memory-supplement.md): Mem0 paper plus codedna / gbrain / sparks / gstack deltas.
+- [knowledge/research/ai-context-os-memm-deep-dive.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/ai-context-os-memm-deep-dive.md): AI-Context-OS (MEMM) backend deep dive.
+- [knowledge/research/llm-wiki-community-batch-1.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/llm-wiki-community-batch-1.md): Community LLM-Wiki survey, batch 1.
+- [knowledge/research/llm-wiki-community-batch-2.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/llm-wiki-community-batch-2.md): Community LLM-Wiki survey, batch 2 plus GraphRAG comparison.
+- [knowledge/research/llm-wiki-critique.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/llm-wiki-critique.md): Cross-cutting critique of LLM-Wiki / GraphRAG approaches.
+- [knowledge/research/llm-wiki-critique-first-agent.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/llm-wiki-critique-first-agent.md): Critique applied to First-Agent's existing knowledge layout.
+- [knowledge/research/llm-wiki-critique-sources.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/llm-wiki-critique-sources.md): Source list for the critique.
+- [knowledge/research/agent-roles.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/agent-roles.md): Agent role taxonomy.
+- [knowledge/research/agent-video-research.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/agent-video-research.md): Video-source research notes (predates current ADR series).
+- [knowledge/research/architect-fa-refactor-ru.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/architect-fa-refactor-ru.md): Architect prompt refactor notes (Russian).
