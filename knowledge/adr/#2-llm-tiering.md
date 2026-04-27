@@ -65,7 +65,7 @@ concrete mapping for v0.1:
 |---|---|---|---|
 | **Planner** | top-tier OSS | GLM 5.1 (or Kimi 2.6 / Mimo 2.5 — config-pickable) | AnyProvider API key / OpenRouter |
 | **Coder** | mid-tier OSS | Nemotron 3 Super (or Qwen 3.6 27B) | AnyProvider API key / OpenRouter |
-| **Debug / elite** | top tier | DIFFERENT top-tier OSS / top tier from AnyProvider API key |
+| **Debug / elite** | top tier | DIFFERENT top-tier OSS / top tier from AnyProvider API key | AnyProvider API key / OpenRouter |
 | **Eval (LLM-as-judge)** | top-tier OSS | DIFFERENT model ; isolated config slot so judge can be version-pinned | AnyProvider API key / OpenRouter |
 
 Configuration lives in a single YAML/TOML file (e.g.
