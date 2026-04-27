@@ -1,4 +1,4 @@
-# ADR-0003 — Memory architecture variant for v0.1
+# ADR-#3 — Memory architecture variant for v0.1
 
 - **Status:** proposed
 - **Date:** 2026-04-27
