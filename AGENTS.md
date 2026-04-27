@@ -27,7 +27,7 @@ Details: [`README.md`](./README.md).
 - New docs go in the right folder:
   - Guides / references → `docs/`. Update [`docs/README.md`](./docs/README.md).
   - Project artifacts (decisions, research, prompts) → `knowledge/`.
-- Architectural decisions → ADR from [`knowledge/adr/0000-template.md`](./knowledge/adr/0000-template.md).
+- Architectural decisions → ADR from [`knowledge/adr/ADR-template.md`](./knowledge/adr/ADR-template.md).
 
 ## PR Checklist
 

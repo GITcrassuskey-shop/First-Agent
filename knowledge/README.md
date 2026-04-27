@@ -14,7 +14,7 @@ knowledge/
 ├── project-overview.md       # one-page product + scope snapshot
 ├── adr/                      # architecture decision records
 │   ├── README.md
-│   └── 0000-template.md
+│   └── ADR-template.md
 ├── prompts/                  # reusable prompts
 │   ├── README.md
 │   └── research-topic.md

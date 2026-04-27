@@ -1,4 +1,4 @@
-# ADR-#1 — v0.1 use-case scope
+# ADR-1 — v0.1 use-case scope
 
 - **Status:** proposed
 - **Date:** 2026-04-27
@@ -94,7 +94,7 @@ volatile-store work that will support it.
 
 - **Positive:** Clear scope for scaffolding (Phase S of the roadmap
   in `research/memory-architecture-design-2026-04-26.md` §9).
-  ADR-0003 can pick Variant A unambiguously. ADR-0002 only needs to
+  ADR-3 can pick Variant A unambiguously. ADR-2 only needs to
   cover the three-role static routing actually used in v0.1.
 - **Positive:** UC1 acceptance is mechanically verifiable (a PR
   was created in a controlled repo from an FA session).
@@ -103,10 +103,10 @@ volatile-store work that will support it.
   v0.1.
 - **Negative:** "Best-effort UC2" needs a token-cost guardrail to
   avoid surprise spend; partially mitigated by static role routing
-  ([ADR-0002](./0002-llm-tiering.md)) which keeps multi-source
+  ([ADR-2](./ADR-2-llm-tiering.md)) which keeps multi-source
   fan-out on Planner-tier OSS rather than elite. Fully addressed
   only when per-role token budgets land — explicitly deferred (see
-  ADR-0002 §Consequences "Follow-up work").
+  ADR-2 §Consequences "Follow-up work").
 - **Follow-up work this unlocks:**
   - PR-write allow-list config (`~/.fa/repos.toml`) — single user
     repo + FA itself for v0.1.

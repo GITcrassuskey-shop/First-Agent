@@ -1,4 +1,4 @@
-# ADR-#2 — LLM tiering & access
+# ADR-2 — LLM tiering & access
 
 - **Status:** proposed
 - **Date:** 2026-04-27

@@ -1,7 +1,7 @@
 # Project Overview — First-Agent
 
 > **Status:** filled 2026-04-27. Source for v0.1 scope decisions in
-> [ADR-0001](./adr/0001-v01-use-case-scope.md). Refresh whenever
+> [ADR-1](./adr/ADR-1-v01-use-case-scope.md). Refresh whenever
 > something on this page changes (do not let it drift).
 
 ## 1. Problem statement
@@ -82,10 +82,10 @@ v0.1 is a prototype, so metrics are deliberately coarse:
     SQLite FTS5 BM25 → (vector layer reserved, deferred to v0.2).
   - Q&A over the resulting wiki using LLM synthesis on top-k chunks.
 - **Memory architecture: Variant A** (Mechanical Wiki) per
-  [ADR-0003](./adr/0003-memory-architecture-variant.md), with
+  [ADR-3](./adr/ADR-3-memory-architecture-variant.md), with
   `volatile/`-store hooks scaffolded for v0.2 promotion.
 - **LLM tiering: static role-routing** (Planner / Coder / Debug) per
-  [ADR-0002](./adr/0002-llm-tiering.md). Mix per-model: local +
+  [ADR-2](./adr/ADR-2-llm-tiering.md). Mix per-model: local +
   OpenRouter + Anthropic.
 - **Inbox-hybrid ingest**: `notes/inbox/` watched directory **plus**
   explicit `fa ingest <url>` for web / arxiv / PR sources.
@@ -105,7 +105,7 @@ v0.1 is a prototype, so metrics are deliberately coarse:
 - **Embeddings / vector store** (sentence-transformers, sqlite-vss):
   scaffolded as an interface point, not implemented.
 - **Graph layer** (typed edges, PPR): explicit non-goal for v0.1.
-  See [ADR-0003](./adr/0003-memory-architecture-variant.md) §Decision.
+  See [ADR-3](./adr/ADR-3-memory-architecture-variant.md) §Decision.
 - **Mem0-style volatile store** with 4-op tool-call API: deferred to
   v0.2 upgrade.
 - **YouTube / Whisper / video ingest**: deferred to v0.2+.
@@ -148,7 +148,7 @@ v0.1 is a prototype, so metrics are deliberately coarse:
   - **Debug / elite:** Anthropic Claude (latest available — Opus
     4.7-tier when accessible, Sonnet otherwise) via Anthropic API.
   - Static role-routing (no dynamic auto-escalation in v0.1). Decision:
-    [ADR-0002](./adr/0002-llm-tiering.md).
+    [ADR-2](./adr/ADR-2-llm-tiering.md).
 - **Latency budget:** no hard SLA in v0.1. Target ≤ 10 s p95 per turn
   on local-vLLM Coder and ≤ 30 s when Anthropic-Debug is invoked.
   Will harden with v0.2 / when adding embeddings.
@@ -162,7 +162,7 @@ v0.1 is a prototype, so metrics are deliberately coarse:
 - **Storage:** filesystem-canonical (Markdown + frontmatter) per
   [`knowledge/README.md`](./README.md). Disposable index in SQLite
   (FTS5 for BM25). No remote DB. Decision:
-  [ADR-0004](./adr/0004-storage-backend.md).
+  [ADR-4](./adr/ADR-4-storage-backend.md).
 
 ## 7. Risks & open questions
 
@@ -175,7 +175,7 @@ v0.1 is a prototype, so metrics are deliberately coarse:
 - **R2 — `gh` CLI authentication & repo allow-list.** PR-write requires
   GitHub credentials and a controlled list of writable repos. *Mitigation:*
   config-driven allow-list (`~/.fa/repos.toml`); fail-closed if a repo
-  isn't listed. ADR-0001 §Consequences.
+  isn't listed. ADR-1 §Consequences.
 - **R3 — Multi-LLM static routing brittleness.** Three providers means
   three failure modes (rate limits, model deprecation, account
   exhaustion). *Mitigation:* per-role fallback chain in config (`primary
@@ -209,7 +209,7 @@ v0.1 is a prototype, so metrics are deliberately coarse:
   v0.1 = Variant A; v0.2 = adds Variant B hooks. Variant C = explicit
   non-goal.
 - **Planner / Coder / Debug** — three LLM-roles routed to different
-  tiers via static config. See [ADR-0002](./adr/0002-llm-tiering.md).
+  tiers via static config. See [ADR-2](./adr/ADR-2-llm-tiering.md).
 - **`hot.md`** — per-session working summary, ~ 500 words, archived to
   `notes/sessions/<date>.md` at session end. Borrowed from
   obsidian-wiki pattern.
