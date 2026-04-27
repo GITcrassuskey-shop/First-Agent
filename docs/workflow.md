@@ -70,6 +70,15 @@
 5. **Pre-commit** — `.pre-commit-config.yaml` с ruff, eol, whitespace, markdownlint.
 6. **Knowledge note** в Devin со ссылкой на Makefile — шаблон в
    [devin-reference.md § Knowledge Notes](./devin-reference.md#knowledge-notes).
+7. **`llms.txt` auto-generator.** Скрипт, который регенерирует
+   [`knowledge/llms.txt`](../knowledge/llms.txt) из текущего дерева
+   `docs/` + `knowledge/`, плюс хук в pre-commit и CI-проверка
+   `git diff --exit-code knowledge/llms.txt` после регенерации.
+   Снимает риск drift'а из manual maintenance — сейчас
+   `AGENTS.md` §PR Checklist #7 ловит drift только если человек
+   не забыл; pre-commit ловит автоматически. Зависимость: после
+   шагов 1–5 (нужен Python проект + pre-commit + CI). Пока этого
+   нет — действует ручное правило #7.
 
 ### Критерии выхода из фазы S
 
