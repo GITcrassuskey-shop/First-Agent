@@ -38,12 +38,12 @@ upgrade.
     stdlib + rank-bm25 / FTS5).
   - No LLM at write time except optional page-type classification —
     Coder-tier-friendly.
-  - Aligns with user ranking and ADR-0001 scope.
+  - Aligns with user ranking and ADR-#1 scope.
   - All v0.2 hooks (volatile/, embeddings/, graph/) can be added
     additively without rewriting v0.1 code.
 - Cons:
   - Multi-hop reasoning weak — UC2 falls back to LLM-fan-out
-    (acceptable per ADR-0001).
+    (acceptable per ADR-#1).
   - No semantic NOOP (no Mem0-style cache hit-rate gain on
     repeated extractions) — fine because v0.1 has no long-running
     multi-session memory feature anyway.
