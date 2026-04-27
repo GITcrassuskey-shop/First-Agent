@@ -1,4 +1,4 @@
-# ADR-0001 — v0.1 use-case scope
+# ADR-#1 — v0.1 use-case scope
 
 - **Status:** proposed
 - **Date:** 2026-04-27
