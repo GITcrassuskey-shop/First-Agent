@@ -103,7 +103,7 @@ index, with the following concrete shape:
 - **Tokeniser**: `unicode61 remove_diacritics 2` + porter stemmer
   for English. Russian / mixed-script content acceptable on `unicode61`
   alone; revisit if recall is poor.
-- **No vector store in v0.1.** A future ADR (or v0.2 ADR-005)
+- **No vector store in v0.1.** A future ADR (or v0.2 ADR-#5)
   introduces either `sqlite-vec` (in the same DB file) or a separate
   `embeddings.sqlite`. The interface the wiki layer talks to will be
   abstract enough to swap implementations without churn in callers.
@@ -140,7 +140,7 @@ index, with the following concrete shape:
 ## References
 
 - [ADR-#1](./#1-v01-use-case-scope.md) — v0.1 scope.
-- [ADR-#3](./0003-memory-architecture-variant.md) — Variant A
+- [ADR-#3](./#3-memory-architecture-variant.md) — Variant A
   read-side: grep → BM25 → reserved vector slot.
 - [`research/memory-architecture-design-2026-04-26.md`](../research/memory-architecture-design-2026-04-26.md) §3 (design space, ось A — filesystem-canonical), §4 (Variant A read-side).
 - [`research/llm-wiki-community-batch-2.md`](../research/llm-wiki-community-batch-2.md) §3.2 (llm-wiki-kit's "ripgrep + lunr/BM25" pattern).
