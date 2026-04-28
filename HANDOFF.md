@@ -3,8 +3,8 @@
 > **Read this first if you are an LLM agent (Devin, Claude, ChatGPT,
 > Cursor, etc.) starting a new session on this repository.**
 >
-> **Last updated:** 2026-04-26 by Devin session
-> [`2f45f66e`](https://app.devin.ai/sessions/2f45f66ef9ff45eab03161ecef165c0e).
+> **Last updated:** 2026-04-28 by Devin session
+> [`c9a88fb8`](https://app.devin.ai/sessions/c9a88fb811fd4891b7f932aaeee9ad26).
 
 This file is a portable counterpart to the Devin Knowledge note
 "First-Agent — current state pointer". Both contain the same
@@ -28,19 +28,19 @@ changes the project state, update **both**.
    — what the project is, what v0.1 ships, what is non-goal.
 4. Skim the ADR index at
    [`knowledge/adr/README.md`](./knowledge/adr/README.md) — the
-   five accepted/proposed decisions that shape v0.1.
+   five accepted decisions that shape v0.1.
 5. Check the **Current state** section below for what is in
    flight right now.
 
 You should now have everything you need. Do not crawl the repo
 manually beyond this point.
 
-## Current state (as of 2026-04-26)
+## Current state (as of 2026-04-28)
 
-- **Stage:** end of design / start of scaffolding. No code in
-  `src/` yet. All decisions for v0.1 are written down or
-  proposed.
-- **Architecture decisions (all accepted unless noted):**
+- **Stage:** Phase S scaffolding complete; start of first module
+  implementation. Minimal `src/fa` package exists only as a CLI
+  smoke entrypoint. No feature module is implemented yet.
+- **Architecture decisions (accepted):**
   - [ADR-1](./knowledge/adr/ADR-1-v01-use-case-scope.md) — UC1
     (coding + PR write) and UC3 (local-docs-to-wiki) in;
     UC4 deferred; UC2 best-effort.
@@ -53,12 +53,12 @@ manually beyond this point.
   - [ADR-4](./knowledge/adr/ADR-4-storage-backend.md) — SQLite
     FTS5 (external-content mode); zero extra deps.
   - [ADR-5](./knowledge/adr/ADR-5-chunker-tool.md) —
-    universal-ctags + markdown-it-py. **Status: proposed**;
-    awaiting accept by project lead. **PR #24 open.**
+    universal-ctags + markdown-it-py.
+- **Scaffolding:** PR #27 added `pyproject.toml`, Ruff, mypy,
+  pytest, pre-commit, GitHub Actions CI, `Makefile`, `markdown-it-py`,
+  and system dependency documentation for `universal-ctags`.
 - **Open PRs.** Check
   <https://github.com/GITcrassuskey-shop/First-Agent/pulls>.
-  Most recent at handoff time:
-  - PR #24 — ADR-5 (proposed). Awaiting accept.
 - **Research notes that close design questions:**
   - [`research/memory-architecture-design-2026-04-26.md`](./knowledge/research/memory-architecture-design-2026-04-26.md)
     — three variants for memory (input to ADR-3).
@@ -68,14 +68,7 @@ manually beyond this point.
 
 ## Next steps (intended order)
 
-1. **Accept ADR-5.** When the project lead agrees with the
-   decision, flip status `proposed → accepted` in a one-line PR.
-2. **Phase S — scaffolding PR.** Create the Python project shell:
-   `pyproject.toml`, ruff, mypy, pytest, pre-commit, CI
-   (GitHub Actions), Makefile. Both `universal-ctags` (system)
-   and `markdown-it-py` (Python) named in `pyproject.toml`.
-   Reference: [`docs/workflow.md`](./docs/workflow.md) §Phase S.
-3. **Implementation PR — chunker.** Implement
+1. **Implementation PR — chunker.** Implement
    `src/fa/chunker/` with the `Chunk` dataclass and `Chunker`
    Protocol from
    [ADR-5 §Decision](./knowledge/adr/ADR-5-chunker-tool.md#decision).
@@ -83,6 +76,10 @@ manually beyond this point.
    [`research/chunker-design.md` §8](./knowledge/research/chunker-design.md#8-sample-test-plan-pre-implementation)
    must pass — including the PowerShell sanity-check on the
    project lead's real 1500-line `.ps1` (not synthetic).
+   The project lead should provide the real `.ps1` and a representative
+   Go sample before this PR is considered mergeable.
+2. **Chunker CLI surface.** Add `fa chunk <path>` for manual
+   inspection of produced chunks as part of the chunker PR.
 
 Phase-S item #7 (auto-generated `llms.txt`) is recorded in
 [`docs/workflow.md`](./docs/workflow.md) as future work; not
