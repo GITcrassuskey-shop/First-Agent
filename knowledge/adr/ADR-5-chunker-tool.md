@@ -1,7 +1,7 @@
 # ADR-5 — Chunker tool selection for v0.1
 
-- **Status:** proposed
-- **Date:** 2026-04-26
+- **Status:** accepted
+- **Date:** 2026-04-28
 - **Deciders:** 0oi9z7m1z8 (project lead) + Devin session 2f45f66e
 
 ## Context
