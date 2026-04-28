@@ -24,7 +24,7 @@ Details: [`README.md`](./README.md).
   convention) — every documentation file is reachable from there in
   one hop. Do not crawl the repo manually before reading this file.
 - All documentation is Markdown. ATX headings (`#`, `##`), short lines ~150 chars.
-- Fenced code blocks 
+- Fenced code blocks
   - ALWAYS open with a language tag:
     - Code: `python`, `yaml`, `json`, `bash`.
     - Non-code (ASCII art, directory trees, prompts, logs): `text`.
