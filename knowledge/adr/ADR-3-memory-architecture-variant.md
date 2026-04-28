@@ -130,9 +130,11 @@ v0.1 milestone. v0.2 ADR will revisit each independently.
   multi-source question than B or C would. ADR-2 mitigates by
   budget-routing to Planner-tier OSS, not elite.
 - **Follow-up work this unlocks:**
-  - Detailed chunker design — likely a research note + follow-up
-    ADR for chunker dependency choice (universal-ctags vs
-    tree-sitter vs per-language regex).
+  - Detailed chunker design — **resolved** by
+    [`research/chunker-design.md`](../research/chunker-design.md)
+    plus [`ADR-5`](./ADR-5-chunker-tool.md) (universal-ctags +
+    markdown-it-py for v0.1; tree-sitter explicit non-goal with
+    re-evaluation triggers).
   - Storage backend ADR (`ADR-4`).
   - v0.2 ADR slot for "Volatile store + Mem0 4-op API".
   - v0.3 (or never) ADR slot for "Vector layer" / "Graph layer" with

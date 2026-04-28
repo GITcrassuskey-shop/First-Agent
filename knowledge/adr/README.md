@@ -28,3 +28,4 @@ You do **not** need an ADR for routine code-level choices.
 | [2](./ADR-2-llm-tiering.md) | LLM tiering & access | accepted |
 | [3](./ADR-3-memory-architecture-variant.md) | Memory architecture variant for v0.1 | accepted |
 | [4](./ADR-4-storage-backend.md) | Storage backend for v0.1 | accepted |
+| [5](./ADR-5-chunker-tool.md) | Chunker tool selection for v0.1 | proposed |

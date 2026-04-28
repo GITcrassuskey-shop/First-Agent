@@ -39,6 +39,7 @@
 - [knowledge/adr/ADR-2-llm-tiering.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/ADR-2-llm-tiering.md): LLM tiering and access (static role routing; Planner / Coder / Debug / Eval).
 - [knowledge/adr/ADR-3-memory-architecture-variant.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/ADR-3-memory-architecture-variant.md): Memory architecture variant for v0.1 (Variant A "Mechanical Wiki").
 - [knowledge/adr/ADR-4-storage-backend.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/ADR-4-storage-backend.md): Storage backend for v0.1 (SQLite FTS5).
+- [knowledge/adr/ADR-5-chunker-tool.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/adr/ADR-5-chunker-tool.md): Chunker tool selection for v0.1 (universal-ctags + markdown-it-py).
 
 ## Prompts (`knowledge/prompts/`)
 
