@@ -15,6 +15,7 @@
 
 - [README.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/README.md): Project overview, current status, roadmap (Russian).
 - [AGENTS.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/AGENTS.md): Instructions for AI agents working in this repo (English).
+- [HANDOFF.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/HANDOFF.md): Cross-LLM session handoff — current state, next steps, bootstrap pointer (mirrors the Devin Knowledge note).
 
 ## Docs (`docs/`)
 
