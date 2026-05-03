@@ -181,6 +181,70 @@ def test_default_threshold_is_500_lines() -> None:
     assert DEFAULT_MAX_SINGLE_CHUNK_LINES == 500
 
 
+def test_setext_headings_levels_match_atx(tmp_path: Path) -> None:
+    """Setext headings (``===`` / ``---`` underlines) must use the same
+    level numbering as their ATX counterparts.
+
+    Regression: an earlier draft computed ``level`` from
+    ``len(token.markup)``, which collapsed every setext H2 to level 1
+    (markup = ``"-"``, length 1) and broke split-depth filtering,
+    parent-title detection, and breadcrumb ancestry.
+    """
+
+    sections = [
+        "Document Title\n",
+        "==============\n",
+        "\nintro paragraph.\n\n",
+        "Section A\n",
+        "---------\n",
+        "\n",
+        "alpha\n" * 250,
+        "\n",
+        "Section B\n",
+        "---------\n",
+        "\n",
+        "beta\n" * 250,
+    ]
+    body = "".join(sections)
+    path = _write(tmp_path, "setext.md", body)
+
+    chunks = MarkdownChunker().chunk_file(path)
+
+    anchors = [c.anchor for c in chunks]
+    assert anchors == ["document-title", "section-a", "section-b"]
+    by_anchor = {c.anchor: c for c in chunks}
+    assert by_anchor["document-title"].parent_title == "Document Title"
+    # H2 setext children carry the H1 setext ancestor as their breadcrumb,
+    # exactly like ATX-style siblings would.
+    assert by_anchor["section-a"].breadcrumb == ("Document Title",)
+    assert by_anchor["section-b"].breadcrumb == ("Document Title",)
+
+
+def test_setext_h2_not_split_at_depth_1(tmp_path: Path) -> None:
+    """A setext H2 (``---`` underline) must not be a split point when
+    ``split_depth=1``.
+    """
+
+    sections = [
+        "Top\n",
+        "===\n",
+        "\nintro\n",
+        "Sub\n",
+        "---\n",
+        "\n",
+        "filler\n" * 600,
+        "\nSecond top\n",
+        "==========\n",
+        "\nstuff\n",
+    ]
+    body = "".join(sections)
+    path = _write(tmp_path, "setext-depth.md", body)
+
+    chunks = MarkdownChunker(split_depth=1).chunk_file(path)
+
+    assert [c.anchor for c in chunks] == ["top", "second-top"]
+
+
 def test_unicode_heading_slug_preserves_cyrillic(tmp_path: Path) -> None:
     sections = ["# Установка\n", "\n## Настройка\n\n", "тело\n" * 600]
     body = "".join(sections)

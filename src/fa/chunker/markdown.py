@@ -167,7 +167,11 @@ def _collect_headings(md: MarkdownIt, text: str) -> list[_Heading]:
     for i, tok in enumerate(tokens):
         if tok.type != "heading_open" or tok.map is None:
             continue
-        level = len(tok.markup)
+        # ``tok.markup`` is the raw heading-marker run for ATX headings (``#``,
+        # ``##``, ...) but a single ``=``/``-`` for setext headings, so we read
+        # the level from ``tok.tag`` (``"h1"``..``"h6"``) which both flavours
+        # share.
+        level = int(tok.tag[1:])
         text_value = ""
         if i + 1 < len(tokens):
             text_value = _flatten_inline_text(tokens[i + 1])
