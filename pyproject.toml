@@ -53,6 +53,9 @@ select = [
 ]
 ignore = []
 
+[tool.ruff.lint.isort]
+known-first-party = ["fa"]
+
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"

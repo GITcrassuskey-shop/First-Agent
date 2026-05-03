@@ -6,6 +6,7 @@ from dataclasses import FrozenInstanceError, fields
 from pathlib import Path
 
 import pytest
+
 from fa.chunker import CHUNKER_VERSION, Chunk, Chunker
 
 

@@ -11,6 +11,7 @@ from itertools import pairwise
 from pathlib import Path
 
 import pytest
+
 from fa.chunker import MarkdownChunker
 from fa.chunker.markdown import DEFAULT_MAX_SINGLE_CHUNK_LINES
 
