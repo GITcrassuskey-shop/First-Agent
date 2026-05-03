@@ -3,8 +3,8 @@
 > **Read this first if you are an LLM agent (Devin, Claude, ChatGPT,
 > Cursor, etc.) starting a new session on this repository.**
 >
-> **Last updated:** 2026-05-01 by Devin session
-> [`2b3711d6`](https://app.devin.ai/sessions/2b3711d6b29c497fba602cb48f850e4d).
+> **Last updated:** 2026-05-03 by Devin session
+> [`29c3918494a44a68aaa3757a68f2dfa9`](https://app.devin.ai/sessions/29c3918494a44a68aaa3757a68f2dfa9).
 
 This file is a portable counterpart to the Devin Knowledge note
 "First-Agent — current state pointer". Both contain the same
@@ -35,7 +35,7 @@ changes the project state, update **both**.
 You should now have everything you need. Do not crawl the repo
 manually beyond this point.
 
-## Current state (as of 2026-05-01)
+## Current state (as of 2026-05-03)
 
 - **Stage:** Phase S scaffolding complete; design layer
   consolidating before first feature-module PR (Phase M).
@@ -118,6 +118,17 @@ manually beyond this point.
     Source for ADR-2 §Amendment 2026-05-01 (MCP forward-compat)
     and ADR-1 §Amendment 2026-05-01 (UC5 deferred). Input for
     future ADR-7 inner-loop (ACI principle, hooks primitive).
+- **Research notes added 2026-05-03:**
+  - [`research/cutting-edge-agent-research-radar-2026-05.md`](./knowledge/research/cutting-edge-agent-research-radar-2026-05.md)
+    — radar/backlog for First-Agent v0.1/v0.2 covering MCP/tool
+    registry, ACI, hooks, memory, eval traces, sandbox/audit, and
+    multi-agent coordination. Input for ADR-7 prep and future
+    module PRs.
+  - [`research/agent-ui-research-radar-v0-2-2026-05.md`](./knowledge/research/agent-ui-research-radar-v0-2-2026-05.md)
+    — v0.2 UI radar covering Hermes Agent UI implementations,
+    Pi surfaces/packages, OpenClaw gateway/UI forks, and
+    Magentic-UI / DuetUI / AXIS research. Input for future
+    UI/control-plane pre-ADR work.
 
 ## Next steps (intended order)
 
@@ -157,6 +168,11 @@ manually beyond this point.
    `Reflexion / Critic / Reflector`, `Self-evolving` terms
    to [`docs/glossary.md`](./docs/glossary.md). Optional;
    not blocking ADR-7.
+6. **v0.2 UI/control-plane pre-ADR** (optional after ADR-7 prep,
+   or before if project lead prioritizes UI): use
+   [`research/agent-ui-research-radar-v0-2-2026-05.md`](./knowledge/research/agent-ui-research-radar-v0-2-2026-05.md)
+   to decide trace-viewer-first vs live-dashboard-first, local BFF
+   shape, event schema, approval UI, and non-goals.
 
 Phase-S item #7 (auto-generated `llms.txt`) is recorded in
 [`docs/workflow.md`](./docs/workflow.md) as future work; not
@@ -174,6 +190,11 @@ blocking.
   blob URL on the head branch (rule #6).
 - **`knowledge/llms.txt`:** must be updated whenever `docs/` or
   `knowledge/` changes structure (rule #7).
+- **Research note language:** notes are read by both humans and
+  agents. Prefer Russian analytical prose and recommendations unless
+  the project lead asks otherwise; keep protocol names, API fields,
+  code, frontmatter keys, and direct quotes in their original language
+  where precision matters.
 - **Code fences:** always have a language tag (`python`, `yaml`,
   `text`, …); never a bare ` ``` ` opening.
 

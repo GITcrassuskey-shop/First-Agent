@@ -20,9 +20,8 @@ Details: [`README.md`](./README.md).
 
 - **Session bootstrap.** At the start of any new agent session, fetch
   [`knowledge/llms.txt`](./knowledge/llms.txt) first. It is the
-  project map for LLM agents ([llmstxt.org](https://llmstxt.org/)
-  convention) — every documentation file is reachable from there in
-  one hop. Do not crawl the repo manually before reading this file.
+  project map for LLM agents. files are reachable from there in
+  one hop. Do not crawl the repo before reading this file.
 - All documentation is Markdown. ATX headings (`#`, `##`), short lines ~150 chars.
 - Fenced code blocks
   - ALWAYS open with a language tag:
@@ -32,6 +31,10 @@ Details: [`README.md`](./README.md).
 - New docs go in the right folder:
   - Guides / references → `docs/`. Update [`docs/README.md`](./docs/README.md).
   - Project artifacts (decisions, research, prompts) → `knowledge/`.
+- Research notes are read by both humans and agents. Prefer Russian for
+  analytical prose, project recommendations. Keep protocol names, API field names, code,
+  and direct quotes in their source language.
+- readability > size
 - Architectural decisions → ADR from [`knowledge/adr/ADR-template.md`](./knowledge/adr/ADR-template.md).
 
 ## PR Checklist
@@ -41,7 +44,7 @@ Verify before opening a PR. Each item has triggered wasted review cycles.
 1. **Code fences have language tags.** No bare ` ``` ` at opening! See rule above.
 2. **Frontmatter uses `compiled:`, not `date:`.** Schema: [`knowledge/README.md`](./knowledge/README.md#conventions).
 3. **File length within tier limits.**
-   - Summaries / overviews: **400-1000 lines**.
+   - Summaries / overviews: **<1000 lines**.
    - Deep-dive research: **<2000 lines**.
    - Readability > size
 4. **`compiled:` date ≥ all dates cited in text.** No temporal impossibilities.

@@ -124,6 +124,40 @@ src/<module_name>/
 - Каждый промпт — отдельный файл в `prompts/`, в Python-строки не зашиваем.
 - Каждый PR обновляет `CHANGELOG.md` (или у нас есть генератор).
 
+### Параллельная работа нескольких агентов / форков
+
+Если два агента работают одновременно, не стройте цепочку merge'ей
+через форк другого агента. У каждого агента своя ветка и свой PR
+прямо в главный репозиторий:
+
+```text
+GITcrassuskey-shop/First-Agent:main
+├─ GrasshopperBoy/First-Agent-fork:<branch>
+└─ MondayInRussian/First-Agent-fork2:<branch>
+```
+
+Даже если GitHub UI показывает fork-chain вида
+`First-Agent → First-Agent-fork → First-Agent-fork2`, рабочая база
+для новых веток всё равно должна быть `GITcrassuskey-shop/First-Agent:main`.
+То есть в дочернем форке:
+
+```bash
+git remote add upstream https://github.com/GITcrassuskey-shop/First-Agent.git
+git fetch upstream
+git checkout -b devin/<task-slug> upstream/main
+```
+
+Перед стартом явно делим ownership по файлам:
+
+- агент A: coordination / docs / handoff files;
+- агент B: feature module files, например `src/fa/chunker/**` и
+  `tests/test_chunker*.py`.
+
+Если PR B зависит от PR A, не ребейзим заранее. В описании PR B пишем:
+`Recommended merge order: PR A → PR B`. После merge PR A агент B
+обновляет ветку от нового `upstream/main` и решает только реальные
+конфликты.
+
 ---
 
 ## Anti-patterns для этой фазы
@@ -133,3 +167,5 @@ src/<module_name>/
 - ❌ Оставлять research-заметки на чьём-то ноутбуке. Коммитим.
 - ❌ Пропустить PRD «потому что и так ясно». Если ясно — то за 10 минут пишется.
 - ❌ Одна сессия = research + scaffolding + реализация. Разделяйте.
+- ❌ Мержить работу второго агента через первый форк, если можно открыть PR
+  напрямую в главный репозиторий.

@@ -7,8 +7,7 @@
 > is Python; target codebases the agent reads can be anything.
 >
 > This file is an index for LLM agents that want to ingest the
-> project documentation in one fetch. Convention: see
-> https://llmstxt.org/. Paths below are GitHub raw URLs against
+> project documentation in one fetch. Paths below are GitHub raw URLs against
 > the `main` branch of `GITcrassuskey-shop/First-Agent` (upstream).
 > Primary working repo is the fork
 > `GrasshopperBoy/First-Agent-fork`; both repos' `main` are kept
@@ -26,7 +25,7 @@
 
 - [docs/README.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/README.md): Wiki index.
 - [docs/architecture.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/architecture.md): Three-layer agent architecture (Interface / Cognitive / Execution).
-- [docs/workflow.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/workflow.md): R-S-M lifecycle and Devin session conventions.
+- [docs/workflow.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/workflow.md): R-S-M lifecycle, Devin session conventions, and parallel-agent fork coordination.
 - [docs/prompting.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/prompting.md): T1-T5 prompt templates and anti-patterns.
 - [docs/devin-reference.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/devin-reference.md): Devin-specific reference (Knowledge notes, Skills, Playbooks).
 - [docs/glossary.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/docs/glossary.md): Project glossary.
@@ -74,3 +73,5 @@
 - [knowledge/research/sliders-structured-reasoning-2026-04.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/sliders-structured-reasoning-2026-04.md): Разбор препринта SLIDERS (Stanford OV AL, arXiv:2604.22294) — aggregation-bottleneck, contextualized chunking, schema induction, relevance gate, primary-key reconciliation, SQL-QA; mapping на ADR-3 / ADR-4 / ADR-5 и UC2 / UC3.
 - [knowledge/research/cross-reference-ampcode-sliders-to-adr-2026-04.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/cross-reference-ampcode-sliders-to-adr-2026-04.md): Cross-reference review двух новых research-нот (ampcode + SLIDERS) против ADR-1..5 — gaps, tensions, 10 пронумерованных рекомендаций (R-1..R-10) и 10 открытых вопросов под решение лида перед стартом Phase M.
 - [knowledge/research/semi-autonomous-agents-cross-reference-2026-05.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/semi-autonomous-agents-cross-reference-2026-05.md): Критический разбор трёх источников по semi-autonomous LLM-агентам (deep-research-report, semi-autonomous-llm-agents research, репо `nextlevelbuilder/goclaw`) против ADR-1..6 — accept/defer/reject фильтрация; основа для ADR-2 §Amendment 2026-05-01 (MCP forward-compat) и ADR-1 §Amendment 2026-05-01 (UC5 deferred); input для будущего ADR-7 inner-loop (ACI principle, hooks primitive).
+- [knowledge/research/cutting-edge-agent-research-radar-2026-05.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/cutting-edge-agent-research-radar-2026-05.md): Радар cutting-edge исследований для First-Agent v0.1/v0.2 — MCP/tool registry, ACI, hooks, memory, eval traces, sandbox/audit и multi-agent coordination; backlog input для ADR-7 prep и будущих module PRs.
+- [knowledge/research/agent-ui-research-radar-v0-2-2026-05.md](https://raw.githubusercontent.com/GITcrassuskey-shop/First-Agent/main/knowledge/research/agent-ui-research-radar-v0-2-2026-05.md): Agent UI radar for First-Agent v0.2 — Hermes Agent UI implementations, Pi surfaces/packages, OpenClaw gateway/UI forks, and human-agent UI research; backlog input for future UI/control-plane ADR prep.
