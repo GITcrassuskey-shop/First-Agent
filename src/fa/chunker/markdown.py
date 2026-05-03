@@ -71,8 +71,15 @@ class MarkdownChunker:
         path_str = str(path)
         encoded = text.encode("utf-8")
 
-        frontmatter_meta = _parse_frontmatter(lines)
+        frontmatter_meta, frontmatter_end_line = _parse_frontmatter(lines)
         headings = _collect_headings(self._md, text)
+        # markdown-it parses the closing ``---`` of YAML frontmatter as a
+        # setext-H2 underlining the previous frontmatter line, which would
+        # otherwise leak as a phantom split-point with the last frontmatter
+        # key as its anchor. Drop everything inside (and on) the frontmatter
+        # fence range.
+        if frontmatter_end_line:
+            headings = [h for h in headings if h.line_start > frontmatter_end_line]
         parent_title = _resolve_parent_title(frontmatter_meta, headings, path)
         topic = frontmatter_meta.get("topic")
 
@@ -124,27 +131,29 @@ def _line_byte_offsets(lines_keepends: list[str]) -> list[int]:
     return offsets
 
 
-def _parse_frontmatter(lines_keepends: list[str]) -> dict[str, str]:
+def _parse_frontmatter(lines_keepends: list[str]) -> tuple[dict[str, str], int]:
     """Detect a ``---``-delimited YAML frontmatter at the top of the file
-    and return single-line ``key: value`` string pairs.
+    and return single-line ``key: value`` string pairs plus the 1-based
+    line number of the closing ``---`` (``0`` when there is no
+    frontmatter).
 
     v0.1 deliberately does NOT pull in a YAML runtime dependency: only
     flat scalar keys are recognised. Multi-line values (block scalars,
     nested mappings, lists) are silently ignored, which is sufficient
     for the two keys the chunker actually needs (``title``, ``topic``).
-    Returns an empty dict when there is no frontmatter or the closing
+    Returns ``({}, 0)`` when there is no frontmatter or the closing
     ``---`` is missing.
     """
 
     if not lines_keepends:
-        return {}
+        return {}, 0
     if lines_keepends[0].strip() != "---":
-        return {}
+        return {}, 0
     meta: dict[str, str] = {}
-    for raw in lines_keepends[1:]:
+    for idx, raw in enumerate(lines_keepends[1:], start=2):
         stripped = raw.rstrip("\r\n")
         if stripped.strip() == "---":
-            return meta
+            return meta, idx
         if not stripped or stripped.lstrip().startswith("#"):
             continue
         if ":" not in stripped:
@@ -154,11 +163,24 @@ def _parse_frontmatter(lines_keepends: list[str]) -> dict[str, str]:
             continue
         key, _, value = stripped.partition(":")
         key = key.strip()
-        value = value.strip().strip('"').strip("'")
+        value = _strip_paired_quotes(value.strip())
         if key and value:
             meta[key] = value
     # Closing --- not found: be conservative, treat as no frontmatter.
-    return {}
+    return {}, 0
+
+
+def _strip_paired_quotes(value: str) -> str:
+    """Strip exactly one matching pair of surrounding ``"`` or ``'``.
+
+    Unpaired or mismatched quotes are kept verbatim — silently dropping
+    a single leading quote from malformed YAML loses information that
+    callers may legitimately need to see.
+    """
+
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in ('"', "'"):
+        return value[1:-1]
+    return value
 
 
 def _collect_headings(md: MarkdownIt, text: str) -> list[_Heading]:

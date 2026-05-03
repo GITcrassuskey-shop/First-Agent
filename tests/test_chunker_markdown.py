@@ -181,6 +181,86 @@ def test_default_threshold_is_500_lines() -> None:
     assert DEFAULT_MAX_SINGLE_CHUNK_LINES == 500
 
 
+def test_frontmatter_close_is_not_a_phantom_split_point(tmp_path: Path) -> None:
+    """The closing ``---`` of YAML frontmatter is parsed by markdown-it
+    as a setext heading underlining the previous frontmatter line.
+
+    Regression: the chunker used to leak this phantom heading into the
+    split-point list, producing a chunk whose anchor was the slugified
+    last frontmatter key (e.g. ``compiled-2026-05-03``) and whose body
+    started at the frontmatter fence — not on the real document
+    structure.
+    """
+
+    sections = [
+        "---\n",
+        'title: "Doc"\n',
+        "topic: architecture\n",
+        "compiled: 2026-05-03\n",
+        "---\n",
+        "\n",
+        "# Real heading\n\n",
+        "Intro.\n",
+    ]
+    for i in range(3):
+        sections.append(f"\n## Section {i + 1}\n\n")
+        sections.append("filler\n" * 200)
+    body = "".join(sections)
+    path = _write(tmp_path, "phantom.md", body)
+
+    chunks = MarkdownChunker().chunk_file(path)
+
+    anchors = [c.anchor for c in chunks]
+    # No phantom anchor synthesised from the closing ``---``.
+    assert "compiled-2026-05-03" not in anchors
+    assert "compiled" not in anchors
+    assert anchors == ["real-heading", "section-1", "section-2", "section-3"]
+    # And the parent-title still resolves through the frontmatter ``title:``,
+    # not through the phantom heading text.
+    assert chunks[0].parent_title == "Doc"
+
+
+def test_frontmatter_preserves_unpaired_leading_quote(tmp_path: Path) -> None:
+    """A bare leading ``\"`` without a matching trailing ``\"`` must be
+    kept verbatim. The previous ``.strip('"').strip(\"'\")`` chain
+    silently dropped one side of the pair, which is data loss for
+    malformed YAML the user may want to see in the chunk's
+    ``parent_title``.
+    """
+
+    body = (
+        "---\n"
+        'title: "missing-close\n'  # deliberately malformed
+        "topic: ok\n"
+        "---\n"
+        "\n"
+        "# Real heading\n\n"
+        "Body.\n"
+    )
+    path = _write(tmp_path, "bad-quote.md", body)
+
+    chunks = MarkdownChunker().chunk_file(path)
+
+    assert len(chunks) == 1
+    chunk = chunks[0]
+    # Unpaired quote is preserved on the value, not silently elided.
+    assert chunk.parent_title == '"missing-close'
+    # Topic with no quotes is unchanged.
+    assert chunk.topic == "ok"
+
+
+def test_frontmatter_strips_paired_single_and_double_quotes(tmp_path: Path) -> None:
+    """Round-trip the two well-formed quoting styles."""
+
+    body = "---\ntitle: 'Single-quoted'\ntopic: \"double-quoted\"\n---\n\n# Heading\n\nBody.\n"
+    path = _write(tmp_path, "quoted.md", body)
+
+    chunk = MarkdownChunker().chunk_file(path)[0]
+
+    assert chunk.parent_title == "Single-quoted"
+    assert chunk.topic == "double-quoted"
+
+
 def test_setext_headings_levels_match_atx(tmp_path: Path) -> None:
     """Setext headings (``===`` / ``---`` underlines) must use the same
     level numbering as their ATX counterparts.
