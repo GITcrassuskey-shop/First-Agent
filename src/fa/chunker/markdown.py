@@ -106,7 +106,6 @@ class MarkdownChunker:
 
         return _split_by_headings(
             path_str=path_str,
-            text=text,
             encoded=encoded,
             lang=self._lang,
             parent_title=parent_title,
@@ -228,7 +227,6 @@ def _resolve_parent_title(meta: dict[str, str], headings: list[_Heading], path: 
 def _split_by_headings(
     *,
     path_str: str,
-    text: str,
     encoded: bytes,
     lang: str,
     parent_title: str,
