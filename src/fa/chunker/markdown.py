@@ -241,6 +241,7 @@ def _split_by_headings(
     chunks: list[Chunk] = []
     breadcrumb_stack = _BreadcrumbStack()
     next_heading_idx = 0
+    seen_anchors: set[str] = set()
 
     for sp_idx, sp in enumerate(split_points):
         # Advance the breadcrumb stack across all (non-split-level too)
@@ -267,7 +268,8 @@ def _split_by_headings(
         byte_start = line_byte_offsets[line_start - 1]
         byte_end = line_byte_offsets[line_end]
         body = encoded[byte_start:byte_end].decode("utf-8")
-        anchor = slugify(sp.text) or f"section-{sp_idx + 1}"
+        base_anchor = slugify(sp.text) or f"section-{sp_idx + 1}"
+        anchor = _disambiguate_anchor(base_anchor, seen_anchors)
 
         chunks.append(
             Chunk(
@@ -286,6 +288,30 @@ def _split_by_headings(
         )
 
     return chunks
+
+
+def _disambiguate_anchor(base: str, seen: set[str]) -> str:
+    """GitHub-style anchor disambiguation.
+
+    Repeated headings (``## Repeat``, ``## Repeat``, ``## Repeat``) would
+    otherwise collide on ``repeat``/``repeat``/``repeat`` and break the
+    ``(path, anchor)`` tuple as a stable lookup key for the SQLite index
+    layer (ADR-1, ADR-3) and the future Mechanical-Wiki search surface.
+    Returns ``base`` for the first occurrence and ``base-2``, ``base-3``,
+    ... for subsequent ones, skipping any candidate that collides with
+    an already-emitted anchor (so an explicit ``## Repeat 2`` heading
+    does not get clobbered).
+    """
+
+    if base not in seen:
+        seen.add(base)
+        return base
+    n = 2
+    while f"{base}-{n}" in seen:
+        n += 1
+    candidate = f"{base}-{n}"
+    seen.add(candidate)
+    return candidate
 
 
 class _BreadcrumbStack:

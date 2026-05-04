@@ -61,3 +61,44 @@ def test_no_trailing_newline_counts_last_line(tmp_path: Path) -> None:
     chunk = chunks[0]
     assert chunk.line_end == 2
     assert chunk.byte_end == len(body.encode("utf-8"))
+
+
+def test_anchor_is_dot_safe_filename_slug(tmp_path: Path) -> None:
+    """ADR-5 Decision step 3: ``anchor = filename`` for config files.
+
+    Regression: a naive ``slugify(path.name)`` strips the ``.`` because it
+    is not a word character, collapsing ``config.yaml`` and ``config.yml``
+    to indistinguishable ``configyaml``/``configyml`` slugs and dropping
+    the extension from human-facing displays. The chunker now uses a
+    dot-safe slug (``config.yaml`` -> ``config-yaml``).
+    """
+
+    cases = [
+        ("config.yaml", "config-yaml"),
+        ("config.yml", "config-yml"),
+        ("foo.py", "foo-py"),
+        ("Module.PSM1", "module-psm1"),
+        ("data.tar.gz", "data-tar-gz"),
+        ("My Config.toml", "my-config-toml"),
+    ]
+    for name, expected_anchor in cases:
+        path = tmp_path / name
+        path.write_text("k: v\n", encoding="utf-8")
+        actual_anchor = PlainTextChunker(lang="text").chunk_file(path)[0].anchor
+        msg = f"{name!r} -> {actual_anchor!r}, expected {expected_anchor!r}"
+        assert actual_anchor == expected_anchor, msg
+
+
+def test_anchor_falls_back_to_chunk_for_dot_only_name(tmp_path: Path) -> None:
+    """A pathological filename consisting solely of dots produces no
+    retainable characters once dots are mapped to hyphens and slugified.
+    The chunker must then fall through to the deterministic ``"chunk"``
+    placeholder rather than producing an empty anchor.
+    """
+
+    path = tmp_path / "..."
+    path.write_text("contents\n", encoding="utf-8")
+
+    chunk = PlainTextChunker().chunk_file(path)[0]
+
+    assert chunk.anchor == "chunk"

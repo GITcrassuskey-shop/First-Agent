@@ -54,5 +54,45 @@ def test_markdown_extension_routes_to_markdown_chunker(tmp_path: Path) -> None:
     assert chunks[0].parent_title == "Title"
 
 
+def test_long_txt_with_headings_splits_via_markdown_chunker(tmp_path: Path) -> None:
+    """ADR-5 Decision step 1 groups ``*.md`` and ``*.txt`` under the
+    heading-aware Markdown pipeline. Long heading-bearing ``.txt`` notes
+    must therefore split into one chunk per H1/H2, exactly like ``.md``,
+    while the chunk's ``lang`` stays ``"text"`` (not ``"markdown"``).
+    """
+
+    sections: list[str] = ["# Top\n", "\n", "Intro paragraph.\n"]
+    for i in range(4):
+        sections.append(f"\n## Section {i + 1}\n\n")
+        sections.append("filler line\n" * 200)
+    body = "".join(sections)
+    path = _write(tmp_path, "long.txt", body)
+
+    chunks = CompositeChunker().chunk_file(path)
+
+    anchors = [c.anchor for c in chunks]
+    assert anchors == ["top", "section-1", "section-2", "section-3", "section-4"]
+    assert {c.lang for c in chunks} == {"text"}
+    # And the gap-free tiling property still holds, like for .md:
+    total_bytes = len(body.encode("utf-8"))
+    assert chunks[0].byte_start == 0
+    assert chunks[-1].byte_end == total_bytes
+
+
+def test_short_txt_without_headings_stays_single_chunk(tmp_path: Path) -> None:
+    """Heading-less ``.txt`` files use the no-headings fallback inside
+    MarkdownChunker and stay a single chunk; ``lang`` remains ``text``.
+    """
+
+    body = "alpha\nbeta\ngamma\n"
+    path = _write(tmp_path, "notes.txt", body)
+
+    chunks = CompositeChunker().chunk_file(path)
+
+    assert len(chunks) == 1
+    assert chunks[0].lang == "text"
+    assert chunks[0].body == body
+
+
 def test_default_chunker_is_a_composite() -> None:
     assert isinstance(default_chunker(), CompositeChunker)

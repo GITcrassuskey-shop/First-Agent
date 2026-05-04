@@ -336,3 +336,52 @@ def test_unicode_heading_slug_preserves_cyrillic(tmp_path: Path) -> None:
     assert anchors == ["установка", "настройка"]
     # Round-trip with multi-byte UTF-8 still lines up.
     assert "".join(c.body for c in chunks) == body
+
+
+def test_duplicate_headings_get_disambiguated_anchors(tmp_path: Path) -> None:
+    """Repeated heading text used to collide on the same anchor, breaking
+    ``(path, anchor)`` as a stable lookup key for the future SQLite
+    index. Subsequent occurrences are now suffixed GitHub-style with
+    ``-2``, ``-3``, ...; the first occurrence keeps the bare slug.
+    """
+
+    sections = ["# Top\n", "\n"]
+    for _ in range(3):
+        sections.append("\n## Repeat\n\n")
+        sections.append("filler\n" * 200)
+    body = "".join(sections)
+    path = _write(tmp_path, "dups.md", body)
+
+    chunks = MarkdownChunker().chunk_file(path)
+
+    anchors = [c.anchor for c in chunks]
+    assert anchors == ["top", "repeat", "repeat-2", "repeat-3"]
+    # All anchors must be unique now -- storage layer can rely on
+    # ``(path, anchor)`` without an extra ordinal field.
+    assert len(set(anchors)) == len(anchors)
+
+
+def test_duplicate_anchor_disambiguation_skips_existing_explicit_suffix(
+    tmp_path: Path,
+) -> None:
+    """If the doc already contains an explicit ``## Repeat 2`` heading,
+    the disambiguation loop must skip ``repeat-2`` to avoid clobbering
+    that explicit anchor when a second ``## Repeat`` appears later.
+    """
+
+    sections = ["# Top\n", "\n"]
+    sections.append("\n## Repeat\n\n")
+    sections.append("filler\n" * 200)
+    sections.append("\n## Repeat 2\n\n")
+    sections.append("filler\n" * 200)
+    sections.append("\n## Repeat\n\n")
+    sections.append("filler\n" * 200)
+    body = "".join(sections)
+    path = _write(tmp_path, "explicit-dup.md", body)
+
+    chunks = MarkdownChunker().chunk_file(path)
+
+    anchors = [c.anchor for c in chunks]
+    # ``Repeat`` -> ``repeat``; explicit ``Repeat 2`` -> ``repeat-2``;
+    # second ``Repeat`` -> ``repeat-3`` (skipping the taken ``repeat-2``).
+    assert anchors == ["top", "repeat", "repeat-2", "repeat-3"]
