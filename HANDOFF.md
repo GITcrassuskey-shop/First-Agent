@@ -3,8 +3,8 @@
 > **Read this first if you are an LLM agent (Devin, Claude, ChatGPT,
 > Cursor, etc.) starting a new session on this repository.**
 >
-> **Last updated:** 2026-05-03 by Devin session
-> [`29c3918494a44a68aaa3757a68f2dfa9`](https://app.devin.ai/sessions/29c3918494a44a68aaa3757a68f2dfa9).
+> **Last updated:** 2026-05-06 by Devin session
+> [`3de5835f8677484788ced9e4e8c8de11`](https://app.devin.ai/sessions/3de5835f8677484788ced9e4e8c8de11).
 
 This file is a portable counterpart to the Devin Knowledge note
 "First-Agent — current state pointer". Both contain the same
@@ -35,7 +35,7 @@ changes the project state, update **both**.
 You should now have everything you need. Do not crawl the repo
 manually beyond this point.
 
-## Current state (as of 2026-05-03)
+## Current state (as of 2026-05-06)
 
 - **Stage:** Phase S scaffolding complete; design layer
   consolidating before first feature-module PR (Phase M).
@@ -129,6 +129,14 @@ manually beyond this point.
     Pi surfaces/packages, OpenClaw gateway/UI forks, and
     Magentic-UI / DuetUI / AXIS research. Input for future
     UI/control-plane pre-ADR work.
+- **Research note added 2026-05-06:**
+  - [`research/efficient-llm-agent-harness-2026-05.md`](./knowledge/research/efficient-llm-agent-harness-2026-05.md)
+    — cross-reference of 2026 harness-engineering papers,
+    MCP/tool-efficiency docs, and three YouTube transcripts
+    against ADR-1..6. Input for ADR-7: subtraction-first
+    inner-loop contract, descriptor-first tool disclosure,
+    raw JSONL trace substrate, and v0.2 deferral of
+    code-execution-over-MCP.
 
 ## Next steps (intended order)
 
@@ -136,13 +144,17 @@ manually beyond this point.
    §10 R-1, future). Should pin: tool-registry contract,
    tool-call audit log shape, edit-format (string-replace vs
    unified-diff), input JSON-Schema validation, **MCP-shaped
-   request/response per ADR-2 amendment 2026-05-01**, and a
-   minimal **hook pipeline** primitive (pre-tool / post-tool;
+   request/response per ADR-2 amendment 2026-05-01**,
+   descriptor-first tool disclosure, raw JSONL trace substrate, and
+   a minimal **hook pipeline** primitive (pre-tool / post-tool;
    pre-run / post-run / on-event deferred to v0.2). Inputs:
    - cross-reference §10 R-1 / R-3 / R-7.
    - semi-autonomous-agents cross-reference §7.1 (R-1 input
      summary), §7.3 (edit-format two shapes), §8.4 (large-file
      two-stage read), §8.5 (mini-hook-system rationale).
+   - efficient harness note §6.1 / R-1..R-5 (subtraction-first
+     contract, progressive tool disclosure, raw traces, no default
+     Critic, code-execution-over-MCP deferred).
 2. **Implementation PR — chunker.** Implement `src/fa/chunker/`
    with the `Chunk` dataclass and `Chunker` Protocol from
    [ADR-5 §Decision](./knowledge/adr/ADR-5-chunker-tool.md#decision)
