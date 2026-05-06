@@ -639,9 +639,9 @@ ADR-7 author **должен** explicit cite ADR-2 §Amendment 2026-05-01 §point
 
 ### R-2 — Trace separation invariant: events.jsonl ≠ hot.md
 
-Предлагаемый формат `events.jsonl` event:
+Предлагаемый формат `events.jsonl` event (pseudo-schema; `|` обозначает discriminated-union `kind`/`actor`, `<…>` — template placeholders, не валидный JSON):
 
-```json
+```text
 {
   "ts": "2026-05-06T13:42:17.123Z",
   "run_id": "<uuid>",
