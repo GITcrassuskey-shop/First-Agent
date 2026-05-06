@@ -102,7 +102,7 @@ topic: "harness-engineering, tool-disclosure, mcp-forward-compat, adr-7-prep, ga
 
 ## 0. Decision Briefing
 
-Восемь рекомендаций (`R-1..R-8`) для ADR-7 prep. Из них две —
+Девять рекомендаций (`R-1..R-9`) для ADR-7 prep. Из них две —
 `UNCERTAIN-ASK`, требуют user-input до фиксации в ADR-7 (это
 методологический контраст с PR #37, где UNCERTAIN-ASK было ноль —
 см. §7.2). Goal-lens см. в frontmatter и §2.
@@ -671,8 +671,8 @@ ADR-4 §Option B (chosen): «SQLite FTS5; one row per chunk; `MATCH` queries ret
 
 Для tools — точно та же модель:
 
-```python
-# Новая virtual-table в ~/.fa/index.sqlite
+```sql
+-- Новая virtual-table в ~/.fa/index.sqlite
 CREATE VIRTUAL TABLE tools USING fts5(
     name UNINDEXED,
     server UNINDEXED,
@@ -680,7 +680,7 @@ CREATE VIRTUAL TABLE tools USING fts5(
     summary,
     tags
 );
-# BM25 tool-search query:
+-- BM25 tool-search query:
 SELECT name, server FROM tools WHERE tools MATCH ? ORDER BY rank LIMIT 5;
 ```
 
