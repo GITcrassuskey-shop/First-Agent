@@ -1,5 +1,5 @@
 ---
-title: "Efficient LLM agent harness — research note for First-Agent ADR-7"
+title: "Efficient LLM agent harness — исследовательская заметка для First-Agent ADR-7"
 source:
   - "https://arxiv.org/abs/2603.25723"
   - "https://arxiv.org/html/2603.25723"
@@ -22,14 +22,14 @@ source:
   - "./cutting-edge-agent-research-radar-2026-05.md"
 compiled: "2026-05-06"
 chain_of_custody: |
-  Source facts are taken from the arXiv abstracts / HTML pages, Anthropic
-  and Bright Data documentation pages listed above, and the user-provided
-  YouTube transcript attachment downloaded to the local Devin session. The
-  transcript is treated as secondary commentary: specific paper/doc claims are
-  cross-checked against primary URLs when the primary page was reachable.
-  Mapping to First-Agent is inferred from current repo files on `main`, especially
-  ADR-1..6, `docs/architecture.md`, and prior harness/tool research notes.
-goal_lens: "Prepare ADR-7 inner-loop / tool-contract choices for an efficient First-Agent v0.1 harness without expanding v0.1 scope."
+  Факты взяты из arXiv abstract / HTML pages, документации Anthropic,
+  документации Bright Data и user-provided YouTube transcript attachment,
+  скачанного в локальную Devin-сессию. Transcript используется как вторичный
+  источник: claims о paper/doc сверялись с primary URLs, когда primary page была
+  доступна. Mapping на First-Agent выведен из текущих repo files на `main`,
+  особенно ADR-1..6, `docs/architecture.md` и предыдущих harness/tool research
+  notes.
+goal_lens: "Подготовить решения для ADR-7 inner-loop / tool-contract: эффективный First-Agent v0.1 harness без расширения v0.1 scope."
 tier: stable
 links:
   - "../adr/ADR-1-v01-use-case-scope.md"
@@ -51,132 +51,132 @@ mentions:
   - "subtraction principle"
 confidence: inferred
 claims_requiring_verification:
-  - "Video-transcript benchmark numbers may contain transcription errors; paper/doc claims should be re-opened at the primary URLs before becoming ADR text."
-  - "The note recommends ADR-7 inputs, not accepted architecture decisions."
-  - "Code execution with MCP is powerful but needs a real execution sandbox; this note does not prove First-Agent can safely ship it in v0.1."
+  - "Числа из video transcript могут содержать ошибки распознавания; перед переносом в ADR нужно повторно открыть primary paper/doc URLs."
+  - "Заметка даёт input для ADR-7, но не является принятой архитектурной decision."
+  - "Code execution with MCP даёт сильную token-efficiency, но требует настоящего execution sandbox; эта заметка не доказывает, что feature безопасна для v0.1."
 superseded_by: ""
 ---
 
-> **Status:** active. Note produced via
+> **Status:** active. Заметка подготовлена по workflow
 > [`knowledge/prompts/research-briefing.md`](../prompts/research-briefing.md),
-> but the `goal_lens:` was inferred from the user's explicit task rather than
-> elicited in a separate blocking question.
+> но `goal_lens:` был выведен из явного user task, а не elicited отдельным
+> blocking question.
 >
-> §0 below is the Decision Briefing intended for the project lead and
-> future LLM agents. §1.. are the deep-dive sections; load them only when
-> §0 is insufficient.
+> §0 — Decision Briefing для project lead и будущих LLM agents. §1.. — deep dive;
+> загружайте их только если §0 недостаточно.
 
 ## 0. Decision Briefing
 
-### R-1 — Make ADR-7 a subtraction-first harness contract
+### R-1 — Описать ADR-7 как subtraction-first harness contract
 
-- **What:** ADR-7 should define the minimal executable harness for UC1/UC3:
-  loop, context policy, tool registry, hooks, permissions, durable trace, and
-  stop conditions. Treat extra verifiers, critic loops, multi-candidate search,
-  and sub-agent routing as opt-in later modules, not defaults.
+- **What:** ADR-7 должен зафиксировать минимальный исполнимый harness для UC1/UC3:
+  loop, context policy, tool registry, hooks, permissions, durable trace и stop
+  conditions. Critic, extra verifiers, multi-candidate search и sub-agents должны
+  быть opt-in later modules, а не default.
 - **Project-axis fit (stable across notes):**
-  - (A) reduces session-start noise: YES (~one ADR-level contract prevents
-    future agents from re-reading multiple harness notes before implementation)
-  - (B) helps LLM find context when needed: YES (ADR-7 becomes the canonical
-    pointer for inner-loop/tool-contract questions)
+  - (A) reduces session-start noise: YES (~один ADR-level contract избавит будущих
+    agents от перечитывания нескольких harness notes перед implementation)
+  - (B) helps LLM find context when needed: YES (ADR-7 станет canonical pointer для
+    inner-loop/tool-contract questions)
 - **Goal-lens fit (per session, dynamic):**
-  - (C) advances chosen goal_lens "Prepare ADR-7 inner-loop / tool-contract
-    choices for an efficient First-Agent v0.1 harness without expanding v0.1
-    scope.": YES (it turns the research into the exact ADR slot already reserved)
+  - (C) advances chosen goal_lens "Подготовить решения для ADR-7 inner-loop /
+    tool-contract: эффективный First-Agent v0.1 harness без расширения v0.1
+    scope.": YES (это ровно тот ADR slot, для которого нужна подготовка)
 - **Cost:** medium (1-4h)
 - **Verdict:** TAKE
 - **If UNCERTAIN-ASK:** n/a
-- **Alternative-if-rejected:** Keep recommendations as research/backlog and let
-  the first inner-loop implementation discover the contract ad hoc.
+- **Alternative-if-rejected:** Оставить выводы как research/backlog и позволить
+  первому inner-loop PR самому обнаружить contract ad hoc.
 - **Concrete first step (if TAKE):** Draft `knowledge/adr/ADR-7-inner-loop-tool-contract.md`
-  from §6.1 and cross-link ADR-2 / ADR-6.
+  из §6.1 и cross-link ADR-2 / ADR-6.
 
-### R-2 — Add tiered tool disclosure before adding more tools
+### R-2 — Ввести tiered tool disclosure до расширения tool set
 
-- **What:** The v0.1 tool registry should expose only lightweight descriptors by
-  default (`name`, one-line `description`, permission, maybe tags) and load full
-  schemas only for selected tools. This mirrors tool search / dynamic context
-  loading without depending on Anthropic's API feature.
+- **What:** v0.1 tool registry должен показывать model только lightweight
+  descriptors by default (`name`, one-line `description`, permission, tags), а full
+  schemas загружать по demand для выбранных tools. Это переносит принцип tool search
+  / dynamic context loading без зависимости от Anthropic API feature.
 - **Project-axis fit (stable across notes):**
-  - (A) reduces session-start noise: YES (keeps tool schemas out of the initial
-    prompt)
-  - (B) helps LLM find context when needed: YES (descriptor → schema is an
-    explicit progressive-disclosure path)
+  - (A) reduces session-start noise: YES (tool schemas не попадают в initial prompt)
+  - (B) helps LLM find context when needed: YES (descriptor → schema даёт явный
+    progressive-disclosure path)
 - **Goal-lens fit (per session, dynamic):**
-  - (C) advances chosen goal_lens "Prepare ADR-7 inner-loop / tool-contract
-    choices for an efficient First-Agent v0.1 harness without expanding v0.1
-    scope.": YES (it is a tool-contract rule, not new infrastructure)
-- **Cost:** cheap (<1h for ADR text; medium when implemented)
+  - (C) advances chosen goal_lens "Подготовить решения для ADR-7 inner-loop /
+    tool-contract: эффективный First-Agent v0.1 harness без расширения v0.1
+    scope.": YES (это правило tool-contract, а не новая infrastructure)
+- **Cost:** cheap (<1h для ADR text; medium при implementation)
 - **Verdict:** TAKE
 - **If UNCERTAIN-ASK:** n/a
-- **Alternative-if-rejected:** Hard-code a small v0.1 tool list in the system
-  prompt and revisit only after context bloat appears.
-- **Concrete first step (if TAKE):** Add `ToolSpec.summary()` / `ToolSpec.schema()`
-  split to the ADR-7 contract.
+- **Alternative-if-rejected:** Захардкодить маленький v0.1 tool list в system prompt
+  и вернуться к вопросу только после фактического context bloat.
+- **Concrete first step (if TAKE):** Добавить в ADR-7 split `ToolSpec.summary()` /
+  `ToolSpec.schema()`.
 
-### R-3 — Keep code-execution-over-MCP out of v0.1, but design for it
+### R-3 — Не включать code-execution-over-MCP в v0.1, но сохранить shape
 
-- **What:** Do not ship a general code execution bridge over MCP in v0.1. Do make
-  internal tool names, schemas, errors, traces, and filesystem discovery compatible
-  with later code-mode / MCP exposure.
+- **What:** Не shipping general code execution bridge over MCP в v0.1. Но internal
+  tool names, schemas, errors, traces и filesystem discovery стоит сделать
+  compatible с future code-mode / MCP exposure.
 - **Project-axis fit (stable across notes):**
-  - (A) reduces session-start noise: PARTIAL (future-ready naming helps, but the
-    feature itself is deferred)
-  - (B) helps LLM find context when needed: YES (tool-as-files and registry search
-    are future-compatible discovery surfaces)
+  - (A) reduces session-start noise: PARTIAL (future-ready naming помогает, но сама
+    feature остаётся deferred)
+  - (B) helps LLM find context when needed: YES (tool-as-files и registry search —
+    future-compatible discovery surfaces)
 - **Goal-lens fit (per session, dynamic):**
-  - (C) advances chosen goal_lens "Prepare ADR-7 inner-loop / tool-contract
-    choices for an efficient First-Agent v0.1 harness without expanding v0.1
-    scope.": YES (it preserves efficiency upside without violating ADR-1 scope)
-- **Cost:** cheap for design guardrail; expensive if implemented now
+  - (C) advances chosen goal_lens "Подготовить решения для ADR-7 inner-loop /
+    tool-contract: эффективный First-Agent v0.1 harness без расширения v0.1
+    scope.": YES (мы сохраняем efficiency upside без нарушения ADR-1 scope)
+- **Cost:** cheap как design guardrail; expensive при implementation сейчас
 - **Verdict:** DEFER
 - **If UNCERTAIN-ASK:** n/a
-- **Alternative-if-rejected:** Implement direct MCP server integration now, accepting
-  sandbox and token-surface complexity before the first module exists.
-- **Concrete first step (if TAKE):** In ADR-7, mark `ToolRegistry.export_code_api()`
-  as v0.2 and reserve stable IDs now.
+- **Alternative-if-rejected:** Реализовать direct MCP integration уже сейчас и принять
+  sandbox / token-surface complexity до появления первого feature module.
+- **Concrete first step (if TAKE):** В ADR-7 отметить `ToolRegistry.export_code_api()`
+  как v0.2 и зарезервировать stable IDs сейчас.
 
-### R-4 — Make raw trace files the eval substrate, summaries only the index
+### R-4 — Сделать raw trace files eval substrate, а summaries — только index
 
-- **What:** Every harness run should append structured JSONL events and keep raw
-  tool outputs / error details addressable on disk. Summaries (`hot.md`, handoff,
-  eval cards) should point to raw traces, not replace them.
+- **What:** Каждый harness run должен писать structured JSONL events и держать raw
+  tool outputs / error details адресуемыми на disk. Summaries (`hot.md`, handoff,
+  eval cards) должны ссылаться на raw traces, а не заменять их.
 - **Project-axis fit (stable across notes):**
-  - (A) reduces session-start noise: YES (future agents read a small summary first)
-  - (B) helps LLM find context when needed: YES (raw trace paths support selective
-    grep/replay when summaries are insufficient)
+  - (A) reduces session-start noise: YES (future agents сначала читают краткий
+    summary)
+  - (B) helps LLM find context when needed: YES (raw trace paths дают selective
+    grep/replay, когда summary недостаточно)
 - **Goal-lens fit (per session, dynamic):**
-  - (C) advances chosen goal_lens "Prepare ADR-7 inner-loop / tool-contract
-    choices for an efficient First-Agent v0.1 harness without expanding v0.1
-    scope.": YES (Meta-Harness evidence says compressed feedback loses signal)
+  - (C) advances chosen goal_lens "Подготовить решения для ADR-7 inner-loop /
+    tool-contract: эффективный First-Agent v0.1 harness без расширения v0.1
+    scope.": YES (Meta-Harness evidence показывает, что compressed feedback теряет
+    важный signal)
 - **Cost:** medium (trace schema + writer + retention rule)
 - **Verdict:** TAKE
 - **If UNCERTAIN-ASK:** n/a
-- **Alternative-if-rejected:** Store only final summaries and accept weaker failure
-  diagnosis / meta-eval later.
-- **Concrete first step (if TAKE):** Add `~/.fa/state/runs/<run_id>/events.jsonl`
-  and artifact-path fields to ADR-7.
+- **Alternative-if-rejected:** Хранить только final summaries и принять слабую
+  future diagnosis / meta-eval.
+- **Concrete first step (if TAKE):** Добавить в ADR-7 `~/.fa/state/runs/<run_id>/events.jsonl`
+  и artifact-path fields.
 
-### R-5 — Do not add Critic / verifier loops to v0.1 by default
+### R-5 — Не добавлять Critic / verifier loops в v0.1 default
 
-- **What:** Keep ADR-2's no-Critic stance. Use deterministic checks (sandbox,
-  schema validation, linters/tests, git status, CI) as gates; reserve LLM Critic,
-  reflection, and multi-candidate search for measured v0.2 experiments.
+- **What:** Сохранить ADR-2 no-Critic stance. Использовать deterministic checks
+  (sandbox, schema validation, linters/tests, git status, CI) как gates; LLM Critic,
+  reflection и multi-candidate search оставить для measured v0.2 experiments.
 - **Project-axis fit (stable across notes):**
-  - (A) reduces session-start noise: YES (fewer default roles and prompts)
-  - (B) helps LLM find context when needed: PARTIAL (less generated critique to
-    search; more reliance on deterministic logs)
+  - (A) reduces session-start noise: YES (меньше default roles и prompts)
+  - (B) helps LLM find context when needed: PARTIAL (меньше generated critique для
+    поиска; больше reliance on deterministic logs)
 - **Goal-lens fit (per session, dynamic):**
-  - (C) advances chosen goal_lens "Prepare ADR-7 inner-loop / tool-contract
-    choices for an efficient First-Agent v0.1 harness without expanding v0.1
-    scope.": YES (prevents scope creep and token waste)
+  - (C) advances chosen goal_lens "Подготовить решения для ADR-7 inner-loop /
+    tool-contract: эффективный First-Agent v0.1 harness без расширения v0.1
+    scope.": YES (это снижает scope creep и token waste)
 - **Cost:** cheap
 - **Verdict:** TAKE
 - **If UNCERTAIN-ASK:** n/a
-- **Alternative-if-rejected:** Add an always-on Reflector/Critic role and measure
-  if success improves enough to justify extra cost.
-- **Concrete first step (if TAKE):** In ADR-7, state `critic_loop = out_of_scope_v0.1`
-  and list deterministic validation gates instead.
+- **Alternative-if-rejected:** Добавить always-on Reflector/Critic role и отдельно
+  измерять, окупает ли success-rate лишний cost.
+- **Concrete first step (if TAKE):** В ADR-7 зафиксировать `critic_loop = out_of_scope_v0.1`
+  и перечислить deterministic validation gates.
 
 ### Summary
 
@@ -190,99 +190,100 @@ superseded_by: ""
 
 ## 1. TL;DR
 
-- Harness ≠ framework. Harness is the fixed control surface that turns a one-shot
-  model into an agent: loop, state, tools, permissions, context, validation, and
-  stopping.
-- The two 2026 papers strengthen an existing First-Agent intuition: the reusable
-  asset is not only the model tier, but the external harness around it.
-- For FA v0.1 the right move is not "more orchestration"; it is a small, explicit,
-  inspectable ADR-7 contract that can be ablated later.
-- Tool-token efficiency should start with progressive disclosure: descriptor first,
-  schema on demand, full external MCP/code execution deferred.
-- Raw traces matter. Meta-Harness-style learning depends on code, scores, and
-  execution traces being stored on a filesystem, not collapsed into short summaries.
-- ADR-2 and ADR-6 are already directionally correct: static role routing, MCP-shaped
-  tools, no Critic in v0.1, and sandbox as canonical pre-tool gate.
-- The main new recommendation is to make "subtraction" an explicit design norm:
-  every harness component must justify its token/runtime/security cost.
+- Harness — это не framework и не prompt. Это control surface, который превращает
+  одноразовый model call в agent: loop, state, tools, permissions, context,
+  validation и stopping.
+- Две 2026 papers усиливают уже существующую intuition First-Agent: reusable asset —
+  не только model tier, но и внешний harness вокруг model.
+- Для FA v0.1 правильный ход — не "больше orchestration", а маленький, явный,
+  inspectable ADR-7 contract, который потом можно ablate.
+- Tool-token efficiency стоит начинать с progressive disclosure: descriptor first,
+  schema on demand, external MCP/code execution deferred.
+- Raw traces важны. Meta-Harness-style learning зависит от code, scores и execution
+  traces на filesystem, а не от коротких summaries.
+- ADR-2 и ADR-6 уже направлены правильно: static role routing, MCP-shaped tools,
+  no Critic в v0.1 и sandbox как canonical pre-tool gate.
+- Новый практический вывод: сделать "subtraction" design norm. Каждый harness
+  component должен оправдывать token/runtime/security cost.
 
-## 2. Scope, метод
+## 2. Scope и метод
 
-**Goal-lens (verbatim):** "Prepare ADR-7 inner-loop / tool-contract choices for an
- efficient First-Agent v0.1 harness without expanding v0.1 scope."
+**Goal-lens:** "Подготовить решения для ADR-7 inner-loop / tool-contract:
+эффективный First-Agent v0.1 harness без расширения v0.1 scope."
 
-Sources read:
+Прочитаны:
 
-- the user-provided transcript of three videos;
-- primary pages for the two papers and the linked Anthropic / Bright Data / MCP docs;
-- ADR-1..6, `docs/architecture.md`, and prior First-Agent research notes on Amp,
-  MCP/tooling radar, and harness-adjacent design.
+- user-provided transcript трёх videos;
+- primary pages для двух papers и linked Anthropic / Bright Data / MCP docs;
+- ADR-1..6, `docs/architecture.md`, previous First-Agent notes по Amp,
+  MCP/tooling radar и harness-adjacent design.
 
-Method:
+Метод:
 
-1. Extract core harness claims from the transcript.
-2. Verify paper/doc claims where primary URLs were reachable.
-3. Map each claim to accepted ADR constraints.
-4. Convert only the high-confidence, v0.1-compatible pieces into recommendations.
+1. Выделить core harness claims из transcript.
+2. Проверить paper/doc claims по primary URLs, где страницы были доступны.
+3. Сопоставить claims с принятыми ADR constraints.
+4. Перенести в recommendations только high-confidence pieces, совместимые с v0.1.
 
-Important limit: the transcript's Video 3 cites several benchmark numbers that are
-not all visible in the fetched paper snippets. This note treats those numbers as
-secondary evidence unless repeated in the primary abstract / docs.
+Ограничение: Video 3 transcript содержит benchmark numbers, которые не все видны в
+fetched paper snippets. В этой заметке такие числа рассматриваются как secondary
+evidence, если они не повторены в primary abstract / docs.
 
-## 3. Core facts known before reasoning
+## 3. Основные факты перед reasoning
 
-1. First-Agent v0.1 scope is UC1 coding+PR and UC3 local-docs-to-wiki; UC2 is
-   best-effort, UC4/UC5 are deferred by [ADR-1](../adr/ADR-1-v01-use-case-scope.md).
-2. [ADR-2](../adr/ADR-2-llm-tiering.md) chooses static role routing and adds two
-   important amendments: `tool_protocol: native | prompt-only`, no v0.1 Critic,
-   and MCP-shaped agent↔tool request/response.
-3. [ADR-3](../adr/ADR-3-memory-architecture-variant.md) chooses Mechanical Wiki:
-   filesystem-canonical Markdown, no Mem0, no graph, no embeddings in v0.1.
-4. [ADR-4](../adr/ADR-4-storage-backend.md) chooses SQLite FTS5 as disposable BM25
+1. First-Agent v0.1 scope — UC1 coding+PR и UC3 local-docs-to-wiki; UC2 best-effort,
+   UC4/UC5 deferred по [ADR-1](../adr/ADR-1-v01-use-case-scope.md).
+2. [ADR-2](../adr/ADR-2-llm-tiering.md) выбирает static role routing и добавляет:
+   `tool_protocol: native | prompt-only`, no v0.1 Critic, MCP-shaped agent↔tool
+   request/response.
+3. [ADR-3](../adr/ADR-3-memory-architecture-variant.md) выбирает Mechanical Wiki:
+   filesystem-canonical Markdown, без Mem0, graph и embeddings в v0.1.
+4. [ADR-4](../adr/ADR-4-storage-backend.md) выбирает SQLite FTS5 как disposable BM25
    index over chunks.
-5. [ADR-5](../adr/ADR-5-chunker-tool.md) chooses `universal-ctags` + `markdown-it-py`
-   and gives the chunker contract.
-6. [ADR-6](../adr/ADR-6-tool-sandbox-allow-list.md) makes sandbox/path allow-list
-   mandatory before filesystem-touching tools.
-7. `docs/architecture.md` already frames agents as Instruction / Execution /
-   Integration layers and names Feedback Loop as the central pattern.
-8. The Amp note already shows a minimal coding agent is `LLM + loop + tools`, but
-   FA needs Python, sandboxing, traces, and role routing around that shape.
-9. The new paper/doc sources do not require changing ADR-1..6; they sharpen what
-   ADR-7 should contain.
-10. Missing information at kickoff: exact content of the transcript and primary
-    paper/doc pages. That context was fetched before writing this note.
+5. [ADR-5](../adr/ADR-5-chunker-tool.md) выбирает `universal-ctags` +
+   `markdown-it-py` и задаёт chunker contract.
+6. [ADR-6](../adr/ADR-6-tool-sandbox-allow-list.md) требует sandbox/path allow-list
+   перед filesystem-touching tools.
+7. `docs/architecture.md` уже описывает agents через Instruction / Execution /
+   Integration layers и называет Feedback Loop центральным pattern.
+8. Amp note уже показывает минимального coding agent как `LLM + loop + tools`, но FA
+   нужно обернуть этот shape Python runtime, sandbox, traces и role routing.
+9. Новые sources не требуют менять ADR-1..6; они уточняют, что должен содержать ADR-7.
+10. Missing information на старте: exact transcript content и primary paper/doc pages.
+    Этот context был получен до написания заметки.
 
-## 4. Key concepts
+## 4. Ключевые понятия
 
-- **Harness:** orchestration layer that determines control flow, context, tools,
-  state, validation, permissions, and stop conditions around one or more LLM calls.
-- **Framework:** abstractions a human uses to assemble an agent; not the shipped
-  task-running loop itself.
-- **Natural-Language Agent Harness (NLAH):** Tsinghua paper term for an executable,
+- **Harness:** orchestration layer, который управляет control flow, context, tools,
+  state, validation, permissions и stop conditions вокруг одного или нескольких LLM
+  calls.
+- **Framework:** abstractions, которыми human собирает agent; это не обязательно тот
+  task-running loop, который реально shipped.
+- **Natural-Language Agent Harness (NLAH):** термин Tsinghua paper для executable,
   structured natural-language representation of harness logic.
-- **Intelligent Harness Runtime (IHR):** runtime that interprets an NLAH under a
-  charter, backend tools, child-agent lifecycle, state, and contracts.
-- **Meta-Harness:** Stanford/MIT paper system that searches over harness code using
-  full prior source, scores, and execution traces stored on a filesystem.
-- **Progressive disclosure:** expose minimal descriptors first; load full context,
-  schemas, or data only after the agent proves relevance.
-- **Subtraction principle:** do not add harness structure by default; remove or
-  defer components whose assumptions are no longer justified.
-- **Code execution with MCP:** presenting MCP tools as code/files so the model can
-  load only needed tool definitions and keep intermediate data out of context.
+- **Intelligent Harness Runtime (IHR):** runtime, который интерпретирует NLAH через
+  charter, backend tools, child-agent lifecycle, state и contracts.
+- **Meta-Harness:** Stanford/MIT paper system, который ищет harness code, используя
+  full prior source, scores и execution traces на filesystem.
+- **Progressive disclosure:** сначала показывать minimal descriptors; full context,
+  schemas или data загружать только после relevance signal.
+- **Subtraction principle:** не добавлять harness structure по умолчанию; удалять или
+  откладывать components, whose assumptions больше не оправданы.
+- **Code execution with MCP:** представлять MCP tools как code/files, чтобы model
+  загружала только нужные definitions и не протаскивала intermediate data через
+  context.
 
-## 5. Mapping / analysis
+## 5. Mapping / анализ
 
 ### 5.1 Harness definition vs current FA architecture
 
-The transcript's compact definition — a harness is the fixed architecture that
-turns a model into an agent — matches First-Agent's existing architecture note.
-The useful refinement is that a harness is not just a prompt or not just tools:
-it is the whole loop that decides what the model sees and what gets persisted.
+Transcript определяет harness как fixed architecture, который превращает model в
+agent. Это хорошо совпадает с текущим First-Agent architecture note. Полезное
+уточнение: harness — не только prompt и не только tools. Это весь loop, который
+решает, что model видит, что исполняется, что сохраняется и когда run остановлен.
 
-For First-Agent this means ADR-7 should not be a narrow "tool registry" ADR. It
-should lock the smallest executable inner-loop contract:
+Поэтому ADR-7 не должен быть узким "tool registry" ADR. Он должен закрепить
+smallest executable inner-loop contract:
 
 | Harness piece | Current FA anchor | ADR-7 implication |
 |---|---|---|
@@ -294,118 +295,117 @@ should lock the smallest executable inner-loop contract:
 | Validation | Makefile / CI / pre-commit | Deterministic gates before LLM Critic |
 | Sub-agents | ADR-1 UC5 deferred | Out of v0.1 except future-compatible trace shape |
 
-### 5.2 Natural-language harnesses: relevant, but not a new runtime now
+### 5.2 Natural-language harnesses: relevant, но не новый runtime сейчас
 
-The NLAH paper's primary contribution is representational: harness control logic
-becomes an explicit, editable artifact with contracts, roles, stage structure,
-adapters, scripts, state semantics, and failure taxonomy. The paper separates
-runtime policy from task-family harness logic.
+NLAH paper важна не тем, что FA должен срочно строить generic IHR. Главный сигнал —
+representational: harness control logic можно сделать explicit, editable artifact с
+contracts, roles, stage structure, adapters, scripts, state semantics и failure
+taxonomy. Paper также отделяет runtime policy от task-family harness logic.
 
-This is highly compatible with the current repo because First-Agent already uses
-`AGENTS.md`, prompts, ADRs, research notes, and handoff files as executable-ish
-natural language. But the v0.1 implementation should not introduce a generic IHR.
-That would compete with the immediate Phase M goal. Instead:
+Это хорошо ложится на текущий repo: First-Agent уже использует `AGENTS.md`, prompts,
+ADRs, research notes и handoff files как исполнимый для agents natural-language
+слой. Но v0.1 implementation не должен вводить generic IHR — это отвлечёт от Phase M.
+Вместо этого:
 
-- write ADR-7 in a contract-first style that future agents can execute from text;
-- keep deterministic low-level code for sandbox, tool dispatch, and validation;
-- use the note/ADR/prompt corpus as the natural-language harness layer.
+- написать ADR-7 в contract-first style, который future agents смогут исполнять как
+  text guidance;
+- оставить deterministic low-level code для sandbox, tool dispatch и validation;
+- считать note/ADR/prompt corpus natural-language harness layer.
 
-This is the out-of-the-box synthesis: **First-Agent already has the text half of
-NLAH; ADR-7 should be the bridge to the code half.** No new runtime is needed to
-capture the benefit.
+Creative synthesis: **у First-Agent уже есть text half of NLAH; ADR-7 должен стать
+мостом к code half.** Для этого не нужен новый runtime.
 
-### 5.3 Meta-Harness: raw traces are more valuable than polished summaries
+### 5.3 Meta-Harness: raw traces ценнее polished summaries
 
-Meta-Harness optimizes harness code by letting a coding agent inspect all prior
-candidate code, scores, and execution traces on a filesystem. Its abstract reports:
+Meta-Harness оптимизирует harness code, позволяя coding agent читать все previous
+candidate code, scores и execution traces на filesystem. Abstract сообщает:
 
-- +7.7 points over a state-of-the-art context-management system on online text
-  classification while using 4× fewer context tokens;
-- +4.7 points on average across five held-out models for retrieval-augmented math
+- +7.7 points over state-of-the-art context-management system на online text
+  classification при 4× fewer context tokens;
+- +4.7 points average across five held-out models для retrieval-augmented math
   reasoning;
-- top/better-than-hand-engineered results on TerminalBench-2 in the reported setup.
+- лучше hand-engineered baselines на TerminalBench-2 в reported setup.
 
-The operational lesson for FA is not "build Meta-Harness now". The lesson is:
+Вывод для FA — не "строить Meta-Harness сейчас". Вывод проще:
 
-1. do not destroy raw experience;
-2. store traces where future agents can grep them;
-3. make summaries an index over raw logs;
-4. evaluate harness changes as versioned artifacts.
+1. не уничтожать raw experience;
+2. хранить traces так, чтобы future agents могли `grep` / selectively inspect;
+3. делать summaries index over raw logs;
+4. version harness changes как artifacts.
 
-This directly supports ADR-3's filesystem-first memory and argues for an ADR-7
-trace folder shape before any self-improving harness work exists.
+Это прямо поддерживает ADR-3 filesystem-first memory и требует ADR-7 trace folder
+shape до появления self-improving harness work.
 
-### 5.4 Tool-token efficiency: stack cheap controls before heavy code mode
+### 5.4 Tool-token efficiency: сначала cheap controls, потом code mode
 
-The transcript and linked docs describe several token-reduction layers:
+Transcript и linked docs дают несколько layers token reduction:
 
 | Technique | Primary-source claim | FA v0.1 fit |
 |---|---|---|
-| Tool search | Anthropic docs: multi-server setup can consume ~55k tool-definition tokens; tool search reduces this by >85% and loads 3-5 tools | Implement shape locally via descriptor → schema; no Anthropic-specific dependency |
-| Bright Data groups | Docs expose Rapid / Pro / 11 Groups and `GROUPS` config | Use as design analogy for tool tags/groups, not a dependency |
-| Custom tool list | Transcript: load exact tools after discovery | Good for production recipes / Skills, but too rigid as only mechanism |
-| Dynamic context loading | Three-level disclosure: server → tool list → full schema | Best fit for ADR-7 registry |
-| Programmatic tool calling | Intermediate results stay outside model context | Defer; requires code execution tool semantics |
-| Code execution with MCP | Anthropic blog: tool-as-file discovery, 150k → 2k tokens in example (98.7%) | Defer implementation; reserve stable filesystem/export shape |
-| Output stripping / compact formats | Strip formatted web/page output; TOON helps flat tabular data | Good principle for tool result summaries; avoid new notation as default |
+| Tool search | Anthropic docs: multi-server setup может съедать ~55k tool-definition tokens; tool search снижает это на >85% и загружает 3-5 tools | Реализовать локальный shape через descriptor → schema; без Anthropic-specific dependency |
+| Bright Data groups | Docs показывают Rapid / Pro / 11 Groups и `GROUPS` config | Использовать как design analogy для tool tags/groups, не как dependency |
+| Custom tool list | Transcript: load exact tools after discovery | Подходит для production recipes / Skills, но слишком жёсткий как единственный mechanism |
+| Dynamic context loading | Three-level disclosure: server → tool list → full schema | Лучший fit для ADR-7 registry |
+| Programmatic tool calling | Intermediate results остаются вне model context | Defer; требует code execution tool semantics |
+| Code execution with MCP | Anthropic blog: tool-as-file discovery, 150k → 2k tokens в example (98.7%) | Defer implementation; зарезервировать stable filesystem/export shape |
+| Output stripping / compact formats | Убирать formatted web/page output; TOON помогает для flat tabular data | Хороший принцип для tool result summaries; не делать новую notation default |
 
-The efficient path is additive but staged:
+Efficient path для FA staged:
 
 1. v0.1: descriptor-first registry + compact `ToolResult.summary` + raw artifact path.
-2. v0.1: groups/tags for tools, but only if more than ~10 tools exist.
-3. v0.2: search over tool catalog if schema list grows.
-4. v0.2+: code execution / MCP tool-as-files if sandbox maturity supports it.
+2. v0.1: groups/tags для tools, но только если tools станет больше ~10.
+3. v0.2: search over tool catalog, если schema list вырастет.
+4. v0.2+: code execution / MCP tool-as-files, если sandbox достаточно зрелый.
 
-### 5.5 MCP: standard boundary, not a license to load every tool
+### 5.5 MCP: standard boundary, но не permission to load everything
 
-MCP is the ecosystem's standard integration protocol: hosts, clients, servers;
-resources, prompts, tools; JSON-RPC; capability negotiation; consent and safety.
-Anthropic's launch post frames it as replacing fragmented integrations with one
-protocol. The spec emphasizes user consent/control, privacy, tool safety, and
-authorization flows.
+MCP задаёт ecosystem standard boundary: hosts, clients, servers; resources, prompts,
+tools; JSON-RPC; capability negotiation; consent and safety. Anthropic launch post
+позиционирует MCP как замену fragmented integrations одним protocol. MCP spec особо
+подчёркивает user consent/control, privacy, tool safety и authorization flows.
 
-ADR-2's 2026-05-01 amendment is therefore correct: pin to MCP shape, not MCP
-transport. The new efficiency evidence adds one more warning: **MCP compatibility
-and context efficiency are separate problems.** A naive MCP client that loads all
-schemas into the system prompt can be standard-compliant and still wasteful.
+ADR-2 amendment от 2026-05-01 поэтому выбран правильно: pin to MCP shape, not MCP
+transport. Новые efficiency sources добавляют warning: **MCP compatibility и context
+efficiency — разные задачи.** Naive MCP client может загрузить все schemas в system
+prompt, быть standard-compliant и всё равно тратить лишние tokens.
 
-ADR-7 should therefore say:
+ADR-7 должен сказать:
 
 - tool identity/schema/error shape is MCP-compatible;
-- initial prompt gets only small descriptors;
-- full schemas are loaded only when selected;
-- external MCP servers are out of v0.1;
-- security/consent are enforced before tool execution, per ADR-6.
+- initial prompt получает только compact descriptors;
+- full schemas загружаются only when selected;
+- external MCP servers out of v0.1;
+- security/consent enforced before tool execution по ADR-6.
 
-### 5.6 Subtraction beats maximal architecture for FA v0.1
+### 5.6 Subtraction beats maximal architecture для FA v0.1
 
-Video 3 emphasizes a pattern also consistent with ADR-2's no-Critic amendment:
-more harness modules can hurt. The transcript cites ablations where self-evolution
-helped consistently while verifiers and multi-candidate search sometimes hurt. Even
-if exact numbers need primary-paper recheck, the design lesson is safe:
+Video 3 подчёркивает pattern, совместимый с ADR-2 no-Critic amendment: больше harness
+modules не всегда лучше. Transcript cites ablations, где self-evolution consistently
+helped, а verifiers и multi-candidate search sometimes hurt. Даже если exact numbers
+нужно перепроверить по primary paper, design lesson безопасен:
 
-- a verifier is not automatically safer if it consumes budget, adds wrong vetoes,
-  or hides deterministic failures behind prose;
-- multi-candidate search is not free if UC1 acceptance is a single PR path;
-- sub-agents are not free because they multiply state, permissions, and traces.
+- verifier не автоматически безопаснее, если он тратит budget, добавляет wrong vetoes
+  или прячет deterministic failures за prose;
+- multi-candidate search не free, если UC1 acceptance идёт через один PR path;
+- sub-agents не free, потому что они умножают state, permissions и traces.
 
-For FA, subtraction means:
+Для FA subtraction значит:
 
-1. build the boring loop first;
-2. log enough to evaluate failure modes;
-3. add Critic/search/sub-agents only when a trace-backed failure pattern justifies
-   the extra module.
+1. сначала build boring loop;
+2. логировать достаточно, чтобы видеть failure modes;
+3. добавлять Critic/search/sub-agents только когда trace-backed failure pattern
+   оправдывает extra module.
 
-## 6. Cross-reference against ADR-1..6
+## 6. Cross-reference с ADR-1..6
 
-| ADR | Existing decision | New note's effect |
+| ADR | Existing decision | Эффект этой заметки |
 |---|---|---|
-| ADR-1 — scope | UC1 + UC3 in; UC4/UC5 deferred | Supports scope discipline: no generic IHR, no code-exec MCP bridge, no multi-agent harness in v0.1 |
-| ADR-2 — tiering | Static roles; native tool calls; no Critic; MCP-shaped tools | Strengthens ADR-7 inheritance; adds descriptor/schema progressive disclosure as likely contract detail |
-| ADR-3 — memory | Mechanical Wiki; filesystem canon; no Mem0/graph/embeddings | Strongly supported by Meta-Harness: raw filesystem traces are a feature, not a compromise |
-| ADR-4 — storage | SQLite FTS5 disposable index | Supports tool/search catalog via BM25 later; no new vector need for tool search in v0.1 |
-| ADR-5 — chunker | ctags + markdown-it-py | No change; chunker remains prerequisite for context-efficient retrieval |
-| ADR-6 — sandbox | Deny-by-default path allow-list; audit log | Strengthened: permissions/hook layer is core harness, especially before code execution or MCP expansion |
+| ADR-1 — scope | UC1 + UC3 in; UC4/UC5 deferred | Поддерживает scope discipline: no generic IHR, no code-exec MCP bridge, no multi-agent harness в v0.1 |
+| ADR-2 — tiering | Static roles; native tool calls; no Critic; MCP-shaped tools | Усиливает ADR-7 inheritance; добавляет descriptor/schema progressive disclosure как likely contract detail |
+| ADR-3 — memory | Mechanical Wiki; filesystem canon; no Mem0/graph/embeddings | Сильно поддержано Meta-Harness: raw filesystem traces — feature, not compromise |
+| ADR-4 — storage | SQLite FTS5 disposable index | Поддерживает future tool/search catalog через BM25; no new vector need для v0.1 tool search |
+| ADR-5 — chunker | ctags + markdown-it-py | Изменений нет; chunker остаётся prerequisite для context-efficient retrieval |
+| ADR-6 — sandbox | Deny-by-default path allow-list; audit log | Усилен: permissions/hook layer — core harness, особенно до code execution или MCP expansion |
 
 ### 6.1 Draft ADR-7 contract sketch
 
@@ -445,118 +445,114 @@ Trace:
   ~/.fa/state/runs/<run_id>/artifacts/*
 ```
 
-This sketch deliberately reuses ADR-2's MCP-shaped convention and ADR-6's sandbox
-rather than inventing a parallel tool protocol.
+Этот sketch намеренно переиспользует ADR-2 MCP-shaped convention и ADR-6 sandbox,
+а не создаёт параллельный tool protocol.
 
-## 7. Risks and caveats
+## 7. Риски и caveats
 
-1. **Transcript numbers are secondary.** Some Video 3 benchmark details were not
-   visible in the fetched snippets. Treat them as leads, not ADR-ready facts.
-2. **Code execution with MCP is security-heavy.** The token savings are real in
-   Anthropic's example, but FA cannot safely expose arbitrary code execution until
-   sandbox, permissions, resource limits, and artifact redaction exist.
-3. **Tool search may be premature if v0.1 has only a few tools.** Descriptor/schema
-   split is cheap; full BM25 tool search should wait for catalogue size.
-4. **Natural-language harnesses can drift.** If ADR-7 becomes executable guidance,
-   implementation tests must keep code behavior aligned with text.
-5. **Subtraction can go too far.** Removing verifiers is good only when deterministic
-   checks cover the risk. For filesystem writes, sandbox and tests are non-negotiable.
+1. **Transcript numbers are secondary.** Часть benchmark details из Video 3 не была
+   видна в fetched snippets. Использовать их как leads, не как ADR-ready facts.
+2. **Code execution with MCP is security-heavy.** Token savings в Anthropic example
+   сильные, но FA нельзя безопасно раскрывать arbitrary code execution без sandbox,
+   permissions, resource limits и artifact redaction.
+3. **Tool search may be premature.** Если v0.1 tool catalog маленький, descriptor /
+   schema split достаточно; BM25 tool search должен ждать роста catalog.
+4. **Natural-language harnesses can drift.** Если ADR-7 станет executable guidance,
+   implementation tests должны держать code behavior aligned with text.
+5. **Subtraction can go too far.** Убирать verifiers хорошо только если deterministic
+   checks покрывают risk. Для filesystem writes sandbox и tests non-negotiable.
 
-## 8. Numbered recommendations (R-1..R-5)
+## 8. Пронумерованные рекомендации (R-1..R-5)
 
-### R-1 — Make ADR-7 a subtraction-first harness contract (cost: medium)
+### R-1 — Сделать ADR-7 subtraction-first harness contract (cost: medium)
 
-ADR-7 should be the place where future agents stop debating what the inner loop is.
-It should specify only the pieces needed for UC1/UC3: turn loop, context assembly,
-tool dispatch, permission checks, trace writes, deterministic validation, and stop
-conditions. The hard part is not inventing more roles; it is preventing implicit
-runtime behavior from spreading across code, prompts, and notes.
+ADR-7 должен стать местом, где future agents перестают спорить, что такое inner loop.
+Он должен задавать только v0.1 pieces для UC1/UC3: turn loop, context assembly, tool
+dispatch, permission checks, trace writes, deterministic validation и stop conditions.
+Сложность не в том, чтобы придумать больше roles; сложность — не дать implicit
+runtime behavior расползтись между code, prompts и notes.
 
-The "subtraction-first" wording matters because the source set repeatedly warns
-that harness structure has cost. Critic loops, verifiers, multi-candidate search,
-and sub-agents can all be useful, but each introduces extra context, failure modes,
-and audit surface. For FA v0.1 they should be marked out of scope unless a trace
-proves a specific need.
+Слово subtraction-first важно: источники показывают, что harness structure имеет
+cost. Critic loops, verifiers, multi-candidate search и sub-agents могут быть полезны,
+но каждый добавляет context, failure modes и audit surface. Для FA v0.1 они должны
+быть out of scope, пока trace не докажет конкретную need.
 
-### R-2 — Add tiered tool disclosure before adding more tools (cost: cheap→medium)
+### R-2 — Добавить tiered tool disclosure до расширения tool set (cost: cheap→medium)
 
-A minimal FA registry can copy the insight behind Anthropic tool search without
-copying the product feature. The model initially sees small tool descriptors. When
-it chooses a tool, the runtime validates against that tool's full schema. If the
-catalog grows, a local `repo.search_tools` or BM25-backed catalog can be added.
+Минимальный FA registry может взять insight Anthropic tool search без копирования
+product feature. Model сначала видит small tool descriptors. Когда tool выбран,
+runtime валидирует against full schema. Если catalog вырастет, можно добавить local
+`repo.search_tools` или BM25-backed catalog.
 
-This aligns with ADR-4 because SQLite FTS5 already exists as the project's chosen
-search primitive, and with ADR-2 because JSON Schema is already the agreed tool
-shape. It is a cheap way to keep the initial prompt small and make tool selection
-less noisy.
+Это согласуется с ADR-4, потому что SQLite FTS5 уже выбран как search primitive, и
+с ADR-2, потому что JSON Schema уже согласованный tool shape. Это cheap способ
+держать initial prompt small и снизить noise при tool selection.
 
-### R-3 — Keep code-execution-over-MCP out of v0.1, but design for it (cost: cheap now / expensive if built)
+### R-3 — Держать code-execution-over-MCP вне v0.1, но проектировать совместимый shape (cost: cheap now / expensive if built)
 
-Anthropic's code-execution-with-MCP pattern is the most dramatic efficiency lever
-in the source set: tool definitions become files, intermediate data stays in the
-execution environment, and only final summaries return to the model. But that is
-exactly why it is risky. It requires strong sandboxing, resource limits, data-flow
-redaction, and a trustworthy API surface.
+Anthropic code-execution-with-MCP pattern — самый сильный efficiency lever в sources:
+tool definitions становятся files, intermediate data остаётся в execution environment,
+а model получает только final summaries. Именно поэтому pattern рискованный: нужны
+sandboxing, resource limits, data-flow redaction и trustworthy API surface.
 
-FA v0.1 should therefore reserve the shape, not ship the feature. Stable tool names,
-JSON schemas, compact results, raw artifact paths, and maybe a future
-`tools/as_files/` export are enough to avoid redesign later.
+FA v0.1 должен сохранить shape, но не ship feature. Stable tool names, JSON schemas,
+compact results, raw artifact paths и future `tools/as_files/` export достаточно,
+чтобы не делать redesign later.
 
-### R-4 — Make raw trace files the eval substrate, summaries only the index (cost: medium)
+### R-4 — Сделать raw trace files eval substrate, а summaries — только index (cost: medium)
 
-Meta-Harness is a warning against over-summarizing. Its proposer improves harnesses
-by inspecting prior source, scores, and raw traces through the filesystem. This is
-nearly the same philosophy as Mechanical Wiki: keep the canonical data inspectable,
-then index/summarize for convenience.
+Meta-Harness предупреждает против over-summarizing. Proposer улучшает harnesses,
+читая prior source, scores и raw traces через filesystem. Это почти та же философия,
+что Mechanical Wiki: canonical data остаётся inspectable, а index/summary нужен для
+удобства.
 
-For FA, every loop turn should write JSONL events with tool request, permission
-result, compact output, raw artifact path, model role, token/cost metadata if known,
-and stop reason. Human-friendly summaries can live in `hot.md` or handoff notes,
-but they should cite raw trace paths.
+Для FA каждый loop turn должен писать JSONL events: tool request, permission result,
+compact output, raw artifact path, model role, token/cost metadata if known и stop
+reason. Human-friendly summaries могут жить в `hot.md` или handoff notes, но должны
+cite raw trace paths.
 
-### R-5 — Do not add Critic / verifier loops to v0.1 by default (cost: cheap)
+### R-5 — Не добавлять Critic / verifier loops в v0.1 default (cost: cheap)
 
-ADR-2 already says no Critic in v0.1. The harness sources support that posture:
-verification logic is not automatically helpful, and a verifier can become another
-model call that must itself be interpreted, logged, and debugged. Deterministic
-checks are different: schema validation, sandbox denial, syntax/lint/type/test/CI
-results are cheap evidence and should be part of the loop.
+ADR-2 уже говорит no Critic в v0.1. Harness sources поддерживают это: verification
+logic не automatically helpful, а verifier может стать ещё одним model call, который
+надо интерпретировать, логировать и debug. Deterministic checks — другое дело:
+schema validation, sandbox denial, syntax/lint/type/test/CI results — cheap evidence
+и должны быть частью loop.
 
-A future v0.2 Critic should be triggered by measured failure classes, not aesthetic
-symmetry. Example trigger: repeated traces where deterministic checks pass but PR
-review finds semantic bugs that a second LLM consistently catches.
+Future v0.2 Critic должен появиться из measured failure classes, а не из эстетики.
+Пример trigger: repeated traces, где deterministic checks pass, но PR review находит
+semantic bugs, которые second LLM consistently catches.
 
-## 9. Open questions (Q-1..Q-5)
+## 9. Открытые вопросы (Q-1..Q-5)
 
-### Q-1 — What is the exact first v0.1 tool list?
+### Q-1 — Каким должен быть первый v0.1 tool list?
 
-ADR-7 can define the registry shape before the implementation picks the first
-names. Likely candidates are `repo.read`, `repo.search`, `repo.edit`, `git.status`,
-`test.run`, and `memory.write_hot`, but this should be finalized with the first
-inner-loop PR.
+ADR-7 может задать registry shape до выбора first names. Вероятные candidates:
+`repo.read`, `repo.search`, `repo.edit`, `git.status`, `test.run`, `memory.write_hot`.
+Финализировать стоит вместе с первым inner-loop PR.
 
-### Q-2 — Should tool descriptors be indexed immediately?
+### Q-2 — Нужно ли сразу индексировать tool descriptors?
 
-If the first catalog has fewer than ~10 tools, a plain list is enough. BM25 tool
-search becomes worthwhile when descriptors exceed the model's reliable selection
-range or when external MCP catalogs enter scope.
+Если first catalog меньше ~10 tools, plain list достаточно. BM25 tool search нужен,
+когда descriptors превысят reliable selection range модели или когда external MCP
+catalogs войдут в scope.
 
-### Q-3 — What trace retention policy is acceptable?
+### Q-3 — Какая trace retention policy приемлема?
 
-Raw traces are useful but can contain private code or tool outputs. ADR-7 should
-choose default local retention and redaction rules before traces become long-lived.
+Raw traces полезны, но могут содержать private code или tool outputs. ADR-7 должен
+выбрать default local retention и redaction rules до того, как traces станут long-lived.
 
-### Q-4 — Where does `hot.md` end and JSONL trace begin?
+### Q-4 — Где заканчивается `hot.md` и начинается JSONL trace?
 
-A useful split: `hot.md` is session-level human/agent handoff; JSONL is replayable
-machine trace. The former summarizes; the latter is source-of-truth for eval.
+Практичный split: `hot.md` — session-level human/agent handoff; JSONL — replayable
+machine trace. Первый summarizes; второй source-of-truth for eval.
 
-### Q-5 — How should future code-execution mode be sandboxed?
+### Q-5 — Как sandbox future code-execution mode?
 
-ADR-6 handles path allow-lists, but code execution needs CPU/time/network limits,
-process isolation, and output redaction. This is probably a separate v0.2 ADR.
+ADR-6 покрывает path allow-lists, но code execution требует CPU/time/network limits,
+process isolation и output redaction. Вероятно, это отдельный v0.2 ADR.
 
-## 10. Files used
+## 10. Использованные files
 
 - User-provided attachment `youtube_transcripts.md` (downloaded in-session to
   `/home/ubuntu/attachments/77691155-ce86-46fe-99dd-24028b1facba/youtube_transcripts.md`)
@@ -580,11 +576,11 @@ process isolation, and output redaction. This is probably a separate v0.2 ADR.
 - [`./cutting-edge-agent-research-radar-2026-05.md`](./cutting-edge-agent-research-radar-2026-05.md)
 - [`../../docs/architecture.md`](../../docs/architecture.md)
 
-## 11. Out of scope
+## 11. Вне scope
 
-- Writing ADR-7 itself.
-- Implementing the inner-loop, tool registry, sandbox, or trace writer.
-- Building real MCP servers or MCP clients.
-- Implementing code execution / programmatic tool calling.
-- Choosing final model/provider slugs.
-- Retrofitting old research notes into the §0 Decision Briefing format.
+- Написание самого ADR-7.
+- Implementation inner-loop, tool registry, sandbox или trace writer.
+- Построение real MCP servers или MCP clients.
+- Implementation code execution / programmatic tool calling.
+- Выбор final model/provider slugs.
+- Retrofit старых research notes в §0 Decision Briefing format.
