@@ -492,7 +492,45 @@ already used for `BEFORE_LLM_CALL` per §2 step 2b; (d)
 `chain_from_mapping` now coalesces YAML `null` values for `model`
 and `family` to the empty string (the prior `str(raw.get(key, ""))`
 returned the literal string `"None"` when the YAML key existed with
-a null value).
+a null value). **Amendment 2026-05-22 (T-4 loader landed).**
+`~/.fa/models.yaml` loader merged in
+`devin/1779515293-t4-models-yaml-loader` — `src/fa/providers/config.py`
+(~150 LOC) exports `ModelsConfig` + `load_models_config(text, *,
+env=None)` + `load_models_config_from_path(path=DEFAULT_MODELS_YAML_PATH,
+*, env=None)`. The loader walks the §1 schema via `yaml.safe_load`,
+calls `chain_from_mapping` per role, runs `ChainConfig.validate(env)`
+to accumulate best-effort warnings, and enforces ADR-2 §Amendment
+2026-05-20 rule 1 via `check_eval_disjoint(...)` when planner / coder
+/ eval are all declared. Missing-file returns an empty `ModelsConfig`
+(deny-by-default policy mirrored from `fa.config`); the caller decides
+whether absence is fatal for its workflow. New runtime dep `pyyaml>=6.0`
+(first YAML lib add in the repo; the hand-rolled `_yaml_subset.py`
+covers only inline-comment stripping and cannot safely round-trip the
+§1 nested lists-of-mappings + `extra_headers` schema; the verifier's
+`verify_action.py` parser comment already anticipated the transition).
+23 new offline tests cover happy-path, empty/null/scalar root, empty
+chain, missing `api_key_env`, unknown provider, warnings accumulation,
+all three family-disjoint paths (eval=planner / eval=coder / planner=coder
+allowed / eval-missing skip / planner-missing skip), four-role
+(planner+coder+eval+debug) shape, path-based variant including the
+missing-file branch. **Amendment 2026-05-22 (T-4 review fix-up).**
+Devin Review surfaced a case-sensitive-bypass bug on the safety-critical
+eval-vs-actor family-disjoint check — a YAML `family: "DeepSeek"`
+(mixed case) on planner vs `family: "deepseek"` (lowercase) on eval
+would silently pass `check_eval_disjoint`'s case-sensitive `==`
+comparison because `chain_from_mapping` stored the raw YAML string
+verbatim. **Root fix at the producer site:** `chain_from_mapping`
+in `src/fa/providers/chain.py` now normalises `family` via
+`.strip().lower()` so every downstream consumer (the disjoint check,
+the validator's slug-family mismatch warning, cooldown logging,
+Tier-2 telemetry) sees a canonical form. `.strip().lower()` is used
+rather than routing via `fa.roles.extract_family` because the latter
+raises on any override not in `KNOWN_FAMILIES`, which would reject
+custom / not-yet-known family names that are legal in v0.1. The
+loader's `check_eval_disjoint` call site keeps explicit
+`.strip().lower()` as defence-in-depth. 4 additional regression
+tests (588 total pass) covering case + whitespace at both the
+producer and loader sites.
 
 **Source:** [`ADR-9`](./ADR-9-llm-provider-client.md).
 
